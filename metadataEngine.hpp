@@ -38,12 +38,15 @@
 #include <gtkmm/assistant.h>
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/radiobutton.h>
+#include <gtkmm/switch.h>
+#include <gtkmm/comboboxtext.h>
 // glib/glibmm
 #include <glibmm/miscutils.h>
 
 // internal classes
 #include "EBUCoreFeatures.hpp"
 #include "genericFeatures.hpp"
+#include "customEntry.hpp"
 
 
 /*! \class metadataEngine
@@ -72,7 +75,8 @@ class metadataEngine {
 			Gtk::Box * boxEntriesRef,
 			Gtk::Box * boxStatusRef,
 			Gtk::Expander * expanderRootRef,
-			Gtk::Viewport * viewportTreeRef
+			Gtk::Viewport * viewportTreeRef,
+			Gtk::Switch * SwitchEBUCoreRef
 		);
 		/*!*
 		* @brief Class destructor
@@ -154,14 +158,12 @@ class metadataEngine {
 				add(metadataNodeAttributeIdCol);
 				add(metadataNodeAttributeNameCol); 
 				add(metadataNodeAttributeValueCol);
-				add(metadataNodeAttributeStateCol);
 				add(metadataNodeAttributeBgColorCol);
 			}
 
 			Gtk::TreeModelColumn<int> metadataNodeAttributeIdCol;
 			Gtk::TreeModelColumn<Glib::ustring> metadataNodeAttributeNameCol;
 			Gtk::TreeModelColumn<Glib::ustring> metadataNodeAttributeValueCol;
-			Gtk::TreeModelColumn<Glib::ustring> metadataNodeAttributeStateCol;
 			Gtk::TreeModelColumn<Glib::ustring> metadataNodeAttributeBgColorCol;
 		};
 
@@ -191,11 +193,15 @@ class metadataEngine {
 	
 		unsigned int viewportTreeMinimumWidth;
 		std::vector<xercesc::DOMElement *> elReferences;
+		std::vector<std::string> elSchemaRef;
+		std::string schemaPath;
+		
 		Gtk::Assistant * metadataAssistant;
 		Glib::RefPtr<Gtk::TextBuffer> metadataTextBuffer;
 		Glib::RefPtr<Gtk::TextBuffer> assistantTextBuffer;
 		Glib::RefPtr<Gtk::TextBuffer> assistantNodeChildrenBuffer;
 		Gtk::Entry * attributeNameEntry;
+		Gtk::ComboBoxText * attributeComboBoxText;
 		Gtk::Entry * attributeValueEntry;
 		Gtk::Entry * tagValueEntry;
 		bool addNode_type;
@@ -212,6 +218,7 @@ class metadataEngine {
 		Gtk::Box * lineOne, * lineTwo;
 		Gtk::Box * SecondScrolledWindowBox;
 		Gtk::Box * boxEntries, * boxStatus;
+		Gtk::Switch * EBUCoreSet;
 		// gdk color
 		Gdk::RGBA black;
 		Gdk::RGBA white;
@@ -224,17 +231,16 @@ class metadataEngine {
 		Gtk::Label * previousnodelabel; /*!< previousnode Pointer to store temporarly the current node selected */
 		bool previouslabel;
 		int previousnodepos;
-		// boolean
-		bool editionMode;
 		// EBUCore Wrapper
 		EBUCoreFeatures * SDKWrapper;
 		xercesc::DOMDocument* xercescdoc;
+		EBUCoreFeatures::ElementStruct ebucoreRef;
 	
 	
-		/*void writeMetadataBuffer
+		void on_EBUCoreSet_changed
 		(
-			std::string filename
-		);*/
+			void
+		);
 		
 		void recursiveConstructTreeView
 		(
@@ -333,6 +339,11 @@ class metadataEngine {
 		(
 			Gtk::Box * nodebox, 
 			Glib::RefPtr<Gtk::ListStore> nodeStore
+		);
+		
+		void on_attribute_changed
+		(
+			Gtk::Box * destinationBox
 		);
 		
 		void addNodeAttribute // virtual

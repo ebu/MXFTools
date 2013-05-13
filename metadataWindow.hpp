@@ -64,8 +64,7 @@ protected:
 	Glib::RefPtr<Gtk::Builder> m_refGlade; /*!< Glade references */
 	
 	// gtk button
-	Gtk::Button* enableEBUCoreEdition; /*!< enable edition mode button */
-	Gtk::Button* disableEBUCoreEdition; /*!< disable edition mode button */
+	Gtk::Switch* switchEBUCoreEdition; /*!< switchEBUCoreEdition edition mode button */
 	
 	
 	Gtk::MenuButton* removeEBUCore; /*!< disable edition mode button */
@@ -144,7 +143,7 @@ protected:
 	);
 	
 	/**
-	* @fn void connectSignalClicked (void)
+	* @fn void connectSignals (void)
 	* @brief To connect the clicked signal to events handler 
 	* @brief This method connects each widgets clicked with its own signal. If you add a new clicked event, you must append its signal connection here.\n \n
 	* @brief Currently, the following clicked signals have been connected:\n
@@ -157,7 +156,7 @@ protected:
 	* @return  nothing if all is right or an error at compilation time.
 	* @note This function and his documentation must be completed
 	*/
-	void connectSignalClicked
+	void connectSignals
 	(
 		void
 	);
@@ -178,14 +177,14 @@ protected:
 	);
 	
 	/**
-	* @fn void on_edit_clicked(void)
+	* @fn void on_switchEBUCoreEdition_activate(void)
 	* @brief
 	* @brief
 	* @note needs more documentation
 	* @param[in] void : no params
 	* @return nothing if all is right or an error at compilation time.
 	*/
-	void on_edit_clicked
+	void on_switchEBUCoreEdition_activate
 	(
 		void
 	);

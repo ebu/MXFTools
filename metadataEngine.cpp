@@ -27,7 +27,8 @@ metadataEngine::metadataEngine
 	Gtk::Box * boxEntriesRef,
 	Gtk::Box * boxStatusRef,
 	Gtk::Expander * expanderRootRef,
-	Gtk::Viewport * viewportTreeRef
+	Gtk::Viewport * viewportTreeRef,
+	Gtk::Switch * SwitchEBUCoreRef
 ) 
 {
 	// init the viewport size
@@ -52,8 +53,19 @@ metadataEngine::metadataEngine
 	boxStatus = boxStatusRef;
 	expanderRoot = expanderRootRef;
 	viewportTree = viewportTreeRef;
+	EBUCoreSet = SwitchEBUCoreRef;
+		// Connect the button clicked signals
+	EBUCoreSet->property_active().signal_changed().connect
+	(
+		sigc::mem_fun
+		(
+			*this,
+			&metadataEngine::on_EBUCoreSet_changed
+		)
+	);
 	// init the sdk wrapper
 	SDKWrapper = new EBUCoreFeatures();
+	// by default, no EBUCore set is loaded
 }
 
 metadataEngine::~metadataEngine
@@ -62,6 +74,14 @@ metadataEngine::~metadataEngine
 )
 {	
 	delete SDKWrapper;
+}
+
+void metadataEngine::on_EBUCoreSet_changed
+(
+	void
+)
+{
+	constructEditableNode(elReferences.at(previousnodepos));
 }
 
 void metadataEngine::setRightSide
@@ -87,6 +107,8 @@ void metadataEngine::setRightSide
 		sizeValue->set_text("0 byte");
 		FirstScrolledWindowBox->hide();
 	}
+	// make the switch sensitive or not
+	EBUCoreSet->set_sensitive(genericFeatures::getFileSize(filename) > 0);
 }
 
 unsigned int metadataEngine::getViewportSize
@@ -110,10 +132,9 @@ void metadataEngine::constructTreeViewFromXML
 	xercesc::DOMDocument* dom_doc  = dom_file->parseURI(XMLfile.c_str());
 	xercescdoc = dom_doc;
 	xercesc::DOMElement*  dom_root = dom_doc->getDocumentElement();
-	//xercesc::XMLPlatformUtils::Terminate();
 	// refresh the viewport and the first expander
 	// to display properly the new bunch of metadata
-	viewportTree->remove(); //viewport2->remove();
+	viewportTree->remove();
 	expanderRoot->remove();
 	previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 	// enable html tag support
@@ -141,6 +162,9 @@ void metadataEngine::constructTreeViewFromXML
 	expanderRoot->set_margin_left(0);
 	// build the new xml tree
 	elReferences.clear();
+	elSchemaRef.clear();
+	schemaPath = "";
+	elSchemaRef.push_back(schemaPath);
 	// store the DOM element adress
 	elReferences.push_back(dom_root);
 	previouslabel = false;
@@ -160,9 +184,7 @@ void metadataEngine::constructTreeViewFromMXF
 	std::string MXFFile
 ) 
 {
-	std::cout<<"construct treeview from mxf"<<std::endl;
 	SDKWrapper->UnwrapEBUCore(MXFFile);
-	std::cout<<"unwrap ebucore"<<std::endl;
 	if (SDKWrapper->getEBUCore() != 0) {
 		xercesc::XMLPlatformUtils::Initialize();
 		xercescdoc = SDKWrapper->getEBUCore();
@@ -197,6 +219,9 @@ void metadataEngine::constructTreeViewFromMXF
 		viewportTreeMinimumWidth = ((genericFeatures::removeSuffix(MXFFile, "/")).size()*8 > viewportTreeMinimumWidth)? (genericFeatures::removeSuffix(MXFFile, "/")).size()*8 : viewportTreeMinimumWidth;
 		// build the XML tree
 		elReferences.clear();
+		elSchemaRef.clear();
+		schemaPath = "";
+		elSchemaRef.push_back(schemaPath);
 		previouslabel = false;
 		delete boxEntries;
 	 	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
@@ -207,8 +232,6 @@ void metadataEngine::constructTreeViewFromMXF
 		viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 		SecondScrolledWindowBox->add(*boxEntries);
 	}
-
-	std::cout<<"terminate treeview construction from mxf"<<std::endl;
 }
 
 void metadataEngine::embedEBUCore
@@ -319,9 +342,14 @@ void metadataEngine::recursiveConstructTreeView
 	configureEncapsultedBox(root);
 	do {
 		viewportTreeMinimumWidth = (((xercesc::XMLString::stringLen(el->getTagName())*7)+(depth*16)) > viewportTreeMinimumWidth) ? ((xercesc::XMLString::stringLen(el->getTagName())*7)+(depth*16)) : viewportTreeMinimumWidth;
+		unsigned int lengthPathToRemove = 1;
 		if (el->hasChildNodes() and el->getChildElementCount() != 0) {
 			// create a new expander to store the node children
 			Gtk::Expander * node = manage( new Gtk::Expander(xercesc::XMLString::transcode(el->getTagName())) );
+			// parse the schema path
+			schemaPath = schemaPath+"#"+xercesc::XMLString::transcode(el->getTagName());
+			lengthPathToRemove += xercesc::XMLString::stringLen(el->getTagName());
+			elSchemaRef.push_back(schemaPath);
 			// set a name/id to the node
 //			node->set_name(std::to_string(cptnode++));
 			node->set_name(std::to_string(elReferences.size()));
@@ -339,7 +367,11 @@ void metadataEngine::recursiveConstructTreeView
 			// store the DOM element adress
 			elReferences.push_back(el);
 			// create a new label to store the node children
-			Gtk::Label * label = manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())) );
+			Gtk::Label * label = manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
+			// parse the schema path
+			schemaPath = schemaPath+"#"+xercesc::XMLString::transcode(el->getTagName());
+			lengthPathToRemove += xercesc::XMLString::stringLen(el->getTagName());
+			elSchemaRef.push_back(schemaPath);
 			/// configure the new label
 			configureLabel(label);
 			/// configure the new eventbox and encapsulate the label
@@ -347,6 +379,8 @@ void metadataEngine::recursiveConstructTreeView
 			// end encapsultation level
 			finishEncapsulation(root,eventLabel);
 		}
+		// remove last schema path floor
+		schemaPath.erase(schemaPath.size()-lengthPathToRemove, lengthPathToRemove);
 		// next node at this level
 		el = el->getNextElementSibling();
 	} while (el != 0);
@@ -435,6 +469,7 @@ void metadataEngine::configureEventLabel
 		(
 			sigc::mem_fun
 			(
+			
 				*this, 
 				&metadataEngine::on_press_label
 			),
@@ -500,7 +535,7 @@ void metadataEngine::constructEditableNode
 	editableEntry->set_text(xercesc::XMLString::transcode(el->getTagName()));
 	editableEntry->drag_highlight();
 	editableEntry->set_has_frame(false);
-	editableEntry->set_editable(editionMode);
+	editableEntry->set_editable(EBUCoreSet->get_active());
 	editableEntry->show();
 
 	Gtk::Label * nonEditableEntry = manage(new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
@@ -557,7 +592,7 @@ void metadataEngine::constructEditableNode
 		entryLevel->add(*eventLabel);
 	}
 	entryLevel->add(*tagTitle);
-	if (editionMode) {
+	if (EBUCoreSet->get_active()) {
 		entryLevel->add(*editableEntry);
 		delete nonEditableEntry;
 	} else {
@@ -574,8 +609,8 @@ void metadataEngine::constructEditableNode
 	entryLevel->add(*nodeAttributeTitle);
 
 	//if (el->getAttributes()->getLength()>0) { 
-		configureNodeAttributesTreeview(el->getAttributes(),entryLevel);
-		entryLevel->add(*nodeContent);
+	configureNodeAttributesTreeview(el->getAttributes(),entryLevel);
+	entryLevel->add(*nodeContent);
 	//}
 
 	if (nodeContent->get_text() == "Empty node") {
@@ -593,7 +628,6 @@ void metadataEngine::on_openExpander_changed
 	Gtk::Expander * exp
 ) 
 {
-std::cout<<"expander CHANGED"<<std::endl;
 	// update the previous textual breadcrumb if required
 	if (previousnode->get_label() != "!###ImAnEmptyExpander###!" and !previouslabel) {		
 		previousnode->override_color(black, Gtk::STATE_FLAG_NORMAL);
@@ -602,13 +636,11 @@ std::cout<<"expander CHANGED"<<std::endl;
 		previousnodelabel->override_color(black, Gtk::STATE_FLAG_NORMAL);
 		previouslabel = !previouslabel;
 	}
-	
-	std::cout<<"Expander label : "<<exp->get_label()<<std::endl;
-	std::cout<<"Expander name  : "<<exp->get_name()<<std::endl;
 	exp->override_color(red, Gtk::STATE_FLAG_NORMAL);
 	exp->set_label(exp->get_label());
 	previousnode = exp;
 	previousnodepos = atoi(exp->get_name().c_str());
+	ebucoreRef = SDKWrapper->getReference(elSchemaRef.at(previousnodepos));
 	constructEditableNode(elReferences.at(previousnodepos));
 	if (previousnode->get_name() == "0") {
 		boxStatus->show();
@@ -648,7 +680,6 @@ bool metadataEngine::on_press_label
 	Gtk::Label * txtLabel
 ) 
 {
-	std::cout<<"expander label pressed"<<std::endl;
 	if( (event->type == GDK_BUTTON_PRESS) && (event->button == 1) ) {
 		if (previousnode->get_label() != "!###ImAnEmptyExpander###!" and !previouslabel) {
 			previousnode->override_color(black, Gtk::STATE_FLAG_NORMAL);
@@ -660,8 +691,8 @@ bool metadataEngine::on_press_label
 		txtLabel->override_color(red,Gtk::STATE_FLAG_NORMAL);
 		previousnodepos = atoi(evLabel->get_name().c_str());
 		previousnodelabel = txtLabel;
+		ebucoreRef = SDKWrapper->getReference(elSchemaRef.at(previousnodepos));
 		constructEditableNode(elReferences.at(previousnodepos));
-		
 		if (previousnode->get_name() == "0") {
 			boxStatus->show();boxEntries->hide();
 		} else {
@@ -670,7 +701,6 @@ bool metadataEngine::on_press_label
 		// signal has been handled.		
     return true;
   }
-	// signal hasn't been handled.	
   return false;
 }
 
@@ -708,11 +738,10 @@ void metadataEngine::configureNodeAttributesTreeview
   metadataNodeAttributesTreeview->append_column("", metadataNodeAttributesColumns.metadataNodeAttributeIdCol);
   metadataNodeAttributesTreeview->append_column("Name", metadataNodeAttributesColumns.metadataNodeAttributeNameCol);
   metadataNodeAttributesTreeview->append_column("Value", metadataNodeAttributesColumns.metadataNodeAttributeValueCol);
-  metadataNodeAttributesTreeview->append_column("State", metadataNodeAttributesColumns.metadataNodeAttributeStateCol);
   metadataNodeAttributesTreeview->append_column("Bgcolor", metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol);
 
 	Gtk::TreeView::Column* pColumn;
-	for(guint i = 0; i < 4; i++)
+	for(guint i = 0; i < 3; i++)
   { 
 		pColumn = metadataNodeAttributesTreeview->get_column(i);
 		Gtk::CellRenderer* cellRenderer = metadataNodeAttributesTreeview->get_column_cell_renderer(i);
@@ -724,8 +753,6 @@ void metadataEngine::configureNodeAttributesTreeview
 		}
   }
 	pColumn = metadataNodeAttributesTreeview->get_column(3);
-	pColumn->set_visible(false);
-	pColumn = metadataNodeAttributesTreeview->get_column(4);
 	pColumn->set_visible(false);
 	//All the items to be reordered with drag-and-drop
 	// Set the visibility state of the headers. 
@@ -752,7 +779,6 @@ void metadataEngine::configureNodeAttributesTreeview
 			row[metadataNodeAttributesColumns.metadataNodeAttributeIdCol] = i;
 			row[metadataNodeAttributesColumns.metadataNodeAttributeNameCol] = xercesc::XMLString::transcode(dom_attr->getName());
 			row[metadataNodeAttributesColumns.metadataNodeAttributeValueCol] = xercesc::XMLString::transcode(dom_attr->getValue());
-			row[metadataNodeAttributesColumns.metadataNodeAttributeStateCol] = "original";
 			row[metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol] = (i%2==0)?"white":"ghostwhite";
 		}		
 	}
@@ -765,7 +791,7 @@ void metadataEngine::configureNodeAttributesTreeview
 
 	nodebox->add(*AttributesTreeviewBox);
 
-	if (editionMode) {
+	if (EBUCoreSet->get_active()) {
 		configureNodeAttributeEditionButtonsTreeview(nodebox, metadataNodeAttributesStore);
 	}
 }
@@ -833,11 +859,6 @@ void metadataEngine::configureNodeChildrenTreeview
   metadataNodeChildrenTreeview->set_rules_hint();
 	// grab the treeview selection
 	metadataNodeChildrenTreeviewSelection = metadataNodeChildrenTreeview->get_selection();
-	// connect signal to dectect when tree selection change
-	//metadataNodeChildrenTreeview->signal_button_press_event().connect(sigc::mem_fun(*this,
-  //            &metadataWindow::on_metadata_selection_changed),false);
-	
-
 	int i=0;
 	for (xercesc::DOMElement * nodechildren = children; nodechildren != 0	; nodechildren = nodechildren->getNextElementSibling()) {
   	Gtk::TreeModel::Row row = *(metadataNodeChildrenStore->prepend());
@@ -856,7 +877,7 @@ void metadataEngine::configureNodeChildrenTreeview
 
 	nodebox->add(*ChildrenTreeviewBox);
 
-	if (editionMode) {
+	if (EBUCoreSet->get_active()) {
 		configureNodeEditionButtonsTreeview(nodebox, metadataNodeChildrenStore);
 	}
 }
@@ -875,15 +896,15 @@ void metadataEngine::configureNodeText
 	nodeTextViewScrolledWindow->set_size_request(120, 150);
 
 	Gtk::TextView * nodeTextView = manage (new Gtk::TextView());
-	nodeTextView->override_background_color(((editionMode)? white : whiteghost), Gtk::STATE_FLAG_NORMAL);
+	nodeTextView->override_background_color(((EBUCoreSet->get_active())? white : whiteghost), Gtk::STATE_FLAG_NORMAL);
 	
 	nodeTextView->drag_highlight();
 	nodeTextView->set_pixels_above_lines(2);
 	nodeTextView->set_left_margin(2);
 	nodeTextView->set_right_margin(2);
 
-	nodeTextView->set_editable(editionMode);
-  nodeTextView->set_cursor_visible(editionMode);
+	nodeTextView->set_editable(EBUCoreSet->get_active());
+  nodeTextView->set_cursor_visible(EBUCoreSet->get_active());
 	nodeTextView->set_wrap_mode(Gtk::WRAP_WORD);
 
 	metadataTextBuffer = Gtk::TextBuffer::create();
@@ -1009,6 +1030,46 @@ void metadataEngine::configureNodeEditionButtonsTreeview
 	nodebox->add(*EditButtonBox);
 }
 
+void metadataEngine::on_attribute_changed
+(
+	Gtk::Box * destinationBox
+)
+{
+	switch (attributeComboBoxText->get_active_row_number()) 
+	{
+		case 0:
+		{
+			destinationBox->hide();
+			break;
+		} 
+		default :
+		{
+			destinationBox->show();
+			for (std::list<EBUCoreFeatures::AttributeStruct>::iterator it=ebucoreRef.attribute.begin() ; it != ebucoreRef.attribute.end(); ++it) 
+			{
+				EBUCoreFeatures::AttributeStruct attr = *it;
+				if (attr.name == attributeComboBoxText->get_active_text())
+				{
+					// instanciate a new entry
+					customEntry * CE = new customEntry
+					(
+						attr.type
+					);
+
+					//if (CE->getResponse() == Gtk::RESPONSE_OK) 
+					//{
+					//}
+					delete CE;
+				
+					std::cout<<"type 2 : "<<attr.type<<std::endl;
+					break;
+				}
+			}
+			attributeValueEntry->set_text(genericFeatures::int2str(attributeComboBoxText->get_active_row_number()));
+		}
+	}
+}
+
 void metadataEngine::addNodeAttribute
 (
 	Glib::RefPtr<Gtk::ListStore> metadataStore
@@ -1020,8 +1081,6 @@ void metadataEngine::addNodeAttribute
 	metadataAssistant->set_title("Add a node attribute");
 
 	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	//Gtk::Box * page2 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	//Gtk::Box * page3 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
 
 ////////////// page 1
 	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
@@ -1033,17 +1092,38 @@ void metadataEngine::addNodeAttribute
 	Gtk::AspectFrame * page1hbox3space1 = manage(new Gtk::AspectFrame());
 
 
-	Gtk::Label * attributeNameTitle = manage(new Gtk::Label("Attribute name :"));
-	Gtk::Label * attributeValueTitle = manage(new Gtk::Label("Attribute value :")); 
+	Gtk::Label * attributeNameTitle = manage(new Gtk::Label("Attribute :"));
+	attributeComboBoxText = manage (new Gtk::ComboBoxText(false));
+	attributeComboBoxText->signal_changed().connect
+	(
+		sigc::bind<Gtk::Box *>
+		(
+			sigc::mem_fun
+			(
+				*this,
+				&metadataEngine::on_attribute_changed
+			) ,
+			page1hbox3
+		)
+	);
+	attributeComboBoxText->append("Select an attribute");
+	for (std::list<EBUCoreFeatures::AttributeStruct>::iterator it=ebucoreRef.attribute.begin() ; it != ebucoreRef.attribute.end(); ++it) 
+	{
+		EBUCoreFeatures::AttributeStruct attr = *it;
+		attributeComboBoxText->append(attr.name);
+	}
+	
+	Gtk::Label * attributeValueTitle = manage(new Gtk::Label("Value :")); 
+
+//ebucoreRef
 
 	attributeNameEntry = manage(new Gtk::Entry());
 	attributeValueEntry = manage(new Gtk::Entry());
-	attributeNameEntry->set_placeholder_text("Input the attribute's name'");
-	attributeValueEntry->set_placeholder_text("Input the attribute's value'");
+	attributeValueEntry->set_placeholder_text("Set the attribute's value");
 
 	page1hbox1->add(*attributeNameTitle);
 	page1hbox1->add(*page1hbox1space1);
-	page1hbox1->add(*attributeNameEntry);
+	page1hbox1->add(*attributeComboBoxText);
 	page1hbox1->show_all_children();
 	page1hbox1->show();
 
@@ -1055,7 +1135,7 @@ void metadataEngine::addNodeAttribute
 	page1hbox3->add(*page1hbox3space1);
 	page1hbox3->add(*attributeValueEntry);
 	page1hbox3->show_all_children();
-	page1hbox3->show();
+	
 
 	page1->add(*page1hbox1);
 	page1->add(*page1hbox2);
@@ -1088,10 +1168,6 @@ void metadataEngine::addNodeAttribute
 			&metadataEngine::on_assistant_cancel
 		)
 	);
-
-///
-// save the change
-//
 	metadataAssistant->signal_close().connect
 	(
 		sigc::mem_fun
@@ -1101,16 +1177,10 @@ void metadataEngine::addNodeAttribute
 		)
 	);
 
-//
-
 	metadataAssistant->show_all_children();
+	page1hbox3->hide();
 	metadataAssistant->show();
   	//add to the treeview
-/*  	Gtk::TreeModel::Row row = *(metadataStore->prepend());
-		row[metadataNodeChildrenColumns.metadataNodeChildrenIdCol] = 0;
-  	row[metadataNodeChildrenColumns.metadataNodeChildrenNameCol] = "NodeChildrenName";
-  	row[metadataNodeChildrenColumns.metadataNodeChildrenBgColorCol] = "lightgreen";
-*/
 }
 
 void metadataEngine::removeNodeAttribute
@@ -1347,7 +1417,6 @@ void metadataEngine::on_addAttribute_assistant_apply
 	row[metadataNodeAttributesColumns.metadataNodeAttributeIdCol] = cpt;
 	row[metadataNodeAttributesColumns.metadataNodeAttributeNameCol] = attributeNameEntry->get_text();
 	row[metadataNodeAttributesColumns.metadataNodeAttributeValueCol] = attributeValueEntry->get_text();
-	row[metadataNodeAttributesColumns.metadataNodeAttributeStateCol] = "new";
 	row[metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol] = "lightgreen";
 
 	elReferences.at(previousnodepos)->setAttribute(xercesc::XMLString::transcode(attributeNameEntry->get_text().c_str()), xercesc::XMLString::transcode(attributeValueEntry->get_text().c_str()));

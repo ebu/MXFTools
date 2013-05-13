@@ -28,7 +28,7 @@ metadataWindow::metadataWindow
 	initMetadataMenuPopup();
 	initMetadataWindow();
 	initRightSide();
-	connectSignalClicked(); // clicked buttons
+	connectSignals(); // clicked buttons
 	engine = new metadataEngine
 	(
 		status,
@@ -43,10 +43,10 @@ metadataWindow::metadataWindow
 		boxEntries,
 		boxStatus,
 		expanderRoot,
-		viewportTree
+		viewportTree,
+		switchEBUCoreEdition
 	);
 	set_has_resize_grip();
-//	schema = new ebucoreParser();
 }
 
 // class destructor
@@ -81,18 +81,11 @@ void metadataWindow::refGladeButton
 		"removeEBUCore", 
 		removeEBUCore
 	);
-	
-		
 	refGlade->get_widget
 	(
-		"enableEBUCoreEdition", 
-		enableEBUCoreEdition
+		"switchEBUCoreEdition", 
+		switchEBUCoreEdition
 	);	
-	refGlade->get_widget
-	(
-		"disableEBUCoreEdition", 
-		disableEBUCoreEdition
-	);
 }
 
 void metadataWindow::refGladeWidgets
@@ -133,28 +126,11 @@ void metadataWindow::refGladeWidgets
 	);
 }
 
-void metadataWindow::connectSignalClicked
+void metadataWindow::connectSignals
 (
 	void
 )
 {
-	// Connect the button clicked signals
-	enableEBUCoreEdition->signal_clicked().connect
-	(
-		sigc::mem_fun
-		(
-			*this,
-			&metadataWindow::on_edit_clicked
-		)
-	);
-	disableEBUCoreEdition->signal_clicked().connect
-	(
-		sigc::mem_fun
-		(
-			*this, 
-			&metadataWindow::on_edit_clicked
-		)
-	);
 }
 
 void metadataWindow::on_importEBUCore_clicked
@@ -212,16 +188,6 @@ void metadataWindow::on_importEBUCore_clicked
 		delete FC;
 	}
 }
-
-void metadataWindow::on_edit_clicked
-(
-	void
-)
-{
-	enableEBUCoreEdition->set_visible(!enableEBUCoreEdition->get_visible());
-	disableEBUCoreEdition->set_visible(!disableEBUCoreEdition->get_visible());
-}
-
 void metadataWindow::on_removeEBUCore_clicked
 (
 	void
@@ -744,13 +710,9 @@ void metadataWindow::initMetadataWindow
 	removeEBUCore->set_visible(true);
 	removeEBUCore->set_sensitive(true);
 	// button to switch into edition mode
-	enableEBUCoreEdition->set_visible(true);
-	enableEBUCoreEdition->set_sensitive(true);
-	// button to leave the edition mode
-	disableEBUCoreEdition->set_visible(false);
-	disableEBUCoreEdition->set_sensitive(true);
-	// show
-	//show_all_children();
+	switchEBUCoreEdition->set_visible(true);
+	switchEBUCoreEdition->set_sensitive(false);
+	switchEBUCoreEdition->set_active(false);
 	// Initial window state
 	set_visible(false);
 }

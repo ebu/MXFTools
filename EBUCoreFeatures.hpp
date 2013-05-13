@@ -54,7 +54,7 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <exception>
-
+#include <list>
 #include "genericFeatures.hpp"
 
 
@@ -158,8 +158,132 @@ class EBUCoreFeatures {
 			...
 		);
 		
+		struct AttributeStruct {
+			std::string name;
+			std::string type;
+			bool hasDefaultValue;
+			std::string defaultValue;
+			bool hasEnumeration;
+			std::vector<std::string> Enumeration;
+		};
+
+		struct ElementStruct {
+			std::string name;
+			std::string type;
+			std::list<AttributeStruct> attribute;
+			std::list<ElementStruct> children;		
+			int minCardinality;
+			int maxCardinality;
+			bool leaf;
+			bool hasChoice;
+			std::list<std::list<std::string>> choices;
+		};
+		
+		ElementStruct getReference(std::string path);
+		std::vector<std::string> listEnumeration(xercesc::DOMElement * el);
+		
 	protected:
-	
+
+		std::vector<ElementStruct> ebucoremodel; // ebucore model 
+		std::vector<std::string> ebucoreStack;  //ebucore stack 
+
+		int getSchemas (std::string dir, std::vector<std::string> &files);
+		bool isExtension(std::string str, std::string extension);
+		bool isDCSimpleType(std::string str);
+		bool isStandardType(std::string str);
+		bool isEBUCoreType(std::string str);
+		int isUnbounded(std::string max);
+
+		bool groupExist(std::string str);
+		void extractSchema(std::string pathtofile);
+
+		AttributeStruct DCAttribute(void);
+		std::list<AttributeStruct> DCAttr;
+
+		std::string DCType
+		(
+			void
+		);
+		
+		AttributeStruct packAttribute
+		(
+			xercesc::DOMElement * el
+		);
+		
+		std::list<std::list<std::string>> generateChoices
+		(
+			std::string father,
+			xercesc::DOMElement * el
+		);
+		 
+		std::list<AttributeStruct> generateAttributes
+		(
+			std::string father, 
+			xercesc::DOMElement * el
+		);
+		
+		std::list<ElementStruct> generateChildren
+		(
+			std::string father, 
+			xercesc::DOMElement * el
+		);
+		
+		std::list<EBUCoreFeatures::ElementStruct> generateLocalChildren
+		(
+			std::string father, 
+			xercesc::DOMElement * el, 
+			xercesc::DOMElement * cursor
+		);
+		
+		std::list<ElementStruct>  generateGroupChildren
+		(
+			std::list<ElementStruct> brothers, 
+			std::string father, 
+			xercesc::DOMElement * el
+		);
+		
+		std::list<ElementStruct> generateExtensionChildren
+		(
+			std::list<ElementStruct> brothers, 
+			std::string father, 
+			xercesc::DOMElement * el
+		);
+		
+		std::list<ElementStruct> generateChoiceChildren
+		(
+			std::list<ElementStruct> brothers,
+			xercesc::DOMElement * el,
+			xercesc::DOMElement * parent
+		);
+		
+		ElementStruct constructSchema
+		(
+			xercesc::DOMElement * el
+		);
+		
+		void generateSkeletonElement
+		(
+			ElementStruct skeleton
+		);
+		
+		void generateSkeleton
+		(
+			void
+		);
+		
+		bool hasTypeReference
+		(
+			std::vector<std::pair<std::string, ElementStruct>> typelist,
+			std::string newtype
+		);
+		
+		ElementStruct loopTypeReference
+		(
+			std::vector<std::pair<std::string, ElementStruct>> typelist,
+			std::string newtype
+		);
+		
+		std::ofstream out;
 		xercesc::DOMDocument * dom_doc;
 		xercesc::DOMElement*  dom_root;
 };

@@ -1902,7 +1902,7 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -1920,7 +1920,7 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">3</property>
               </packing>
             </child>
@@ -1938,43 +1938,23 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="disableEBUCoreEdition">
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="has_tooltip">True</property>
-                <property name="tooltip_markup">Disable the edition mode</property>
-                <property name="tooltip_text" translatable="yes">Disable the edition mode</property>
-                <property name="image">metadata-disable-edition</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="on_edit_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="enableEBUCoreEdition">
+              <object class="GtkSwitch" id="switchEBUCoreEdition">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_markup">Enable the edition mode</property>
-                <property name="tooltip_text" translatable="yes">Enable the edition mode</property>
-                <property name="image">metadata-enable-edition</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="on_edit_clicked" swapped="no"/>
+                <property name="tooltip_markup" translatable="yes">Enable/Disable the edition mode</property>
+                <property name="tooltip_text" translatable="yes">Enable/Disable the edition mode</property>
+                <signal name="activate" handler="on_switchEBUCoreEdition_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
+                <property name="fill">False</property>
+                <property name="position">7</property>
               </packing>
             </child>
           </object>
@@ -2642,16 +2622,6 @@ EBU GUI Developer : Marco Dos Santos Oliveira</property>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="metadata-disable-edition">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">emblem-readonly</property>
-  </object>
-  <object class="GtkImage" id="metadata-enable-edition">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">accessories-text-editor</property>
   </object>
   <object class="GtkImage" id="metadata-export">
     <property name="visible">True</property>
