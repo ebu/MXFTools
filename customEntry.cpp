@@ -16,37 +16,26 @@
 
 customEntry::customEntry
 (
-	 std::string expression
+	 std::string expression,
+	 std::string placeholder
 )
 {
 
-	Glib::init();
-
-	/* Reusing one regex pattern: */
-	Glib::RefPtr<Glib::Regex> regex = Glib::Regex::create(expression);
-	std::cout << "Pattern=" << regex->get_pattern()
-	<< "value = false" << std::boolalpha << regex->match("false")<<std::endl
-	<< "value = 0xGT" << std::boolalpha << regex->match("0xGT")<<std::endl
-	<< "value = 0X01" << std::boolalpha << regex->match("0X01")<<std::endl
-	<< "value = 0xEE" << std::boolalpha << regex->match("0xEE")<<std::endl
-	<< "value = 12ED1" << std::boolalpha << regex->match("12ED1")<<std::endl
-	<< "value = True" << std::boolalpha << regex->match("True")<<std::endl
-	<< "value = cxcf" << std::boolalpha << regex->match("cxcf")<<std::endl
-	<< "value = 7" << std::boolalpha << regex->match("7")<<std::endl
-	<< "value = falseeeee\nhellowld \
-	djdj \
-	 \
-	djkdj" << std::boolalpha << regex->match("falseeeee\nhellowld \
-	djdj \
-	 \
-	djkdj")<<std::endl
-	<< "value = 1" << std::boolalpha << regex->match("1")<<std::endl
-	<< "value = 0" << std::boolalpha << regex->match("0")<<std::endl
-	<< "value = -17" << std::boolalpha << regex->match("-17")<<std::endl
-	<< "value = 55656565654787421212100012454754" << std::boolalpha << regex->match("55656565654787421212100012454754")<<std::endl
-	<< "value = 00000065" << std::boolalpha << regex->match("00000065")<<std::endl
-	<< std::endl;
-
+	regex = Glib::Regex::create(getRegEx(expression));
+	set_visibility(true);
+	set_max_length(256);
+	set_width_chars(32);
+	set_value("");
+	set_placeholder_text(placeholder);
+	
+	insert_text_connection = signal_changed().connect
+	(
+		sigc::mem_fun
+		(
+			*this, 
+			&customEntry::insert_text_handler
+		)
+	);
 }
 
 customEntry::~customEntry
@@ -56,7 +45,7 @@ customEntry::~customEntry
 {
 }
 
-std::string customEntry::get_value
+Glib::ustring customEntry::get_value
 (
 	void
 )
@@ -66,7 +55,7 @@ std::string customEntry::get_value
 
 void customEntry::set_value
 (
-	std::string value
+	Glib::ustring value
 )
 {
 	set_text(value);
@@ -107,7 +96,7 @@ std::string customEntry::getRegEx
 	}
 	else if (type == "anyURI") 
 	{
-	return "^((ftp(s)?|sftp|ssh)[://](.+(:.*)?@)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/]*)*)?|http(s)?(://)(.+(:.*)?@)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/?#]*)+([#][^#?/]+)?([?][^#?=&/]+[=][^#?=&/]+([&][^#?/]+)?([?][^#?=&/]+[=][^#?=&/]+)*)?)?|(gopher|mms|rtsp|rtspu|nntp|telnet)(://)([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/]*)*)?|((mailto:)[a-zA-Z0-9!#$\%&\'*+-/=?^_`\{|}~\" <>\()\[]çéèàüãô]{1}([.]?[a-zA-Z0-9!#$\%&\'*+-/=?^_`\{|}~\" <>\()\[]çéèàüãô]+)*[@]{1}[a-zA-Z0-9]{1}([.]?[a-zA-Z0-9]+)*[.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})){1})|([uU][rR][nN][:][a-zA-Z0-9-]{1,32}[:]([a-zA-Z0-9\()+,-.:=@;$_!*\'/?#]|[\%][a-fA-F0-9]{2})+)|(((/|../|./)*)?([/]?[a-zA-Z0-9])*([#][a-zA-Z0-9]+)?)$";
+	return "^((ftp(s)?|sftp|ssh)[://](.+(:.*)?@)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/]*)*)?|http(s)?(://)(.+(:.*)?@)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/?#]*)+([#][^#?/]+)?([?][^#?=&/]+[=][^#?=&/]+([&][^#?/]+)?([?][^#?=&/]+[=][^#?=&/]+)*)?)?|(gopher|mms|rtsp|rtspu|nntp|telnet)(://)([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*)?([a-zA-Z0-9][.]?([a-zA-Z0-9]|(-|\%))*){3,63}([.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})))?(:([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?(([/][^/]*)*)?|((mailto:)[a-zA-Z0-9!#$\%&\'*+-/=?^_`\{|}~\" <>\()\[]çéèàüãô]{1}([.]?[a-zA-Z0-9!#$\%&\'*+-/=?^_`\{|}~\" <>\()\[]çéèàüãô]+)*[@]{1}[a-zA-Z0-9]{1}([.]?[a-zA-Z0-9]+)*[.]{1}(com|net|org|info|arpa|biz|name|pro|xxx|edu|gov|mil|int|coop|museum|aero|jobs|travel|cat|mobi|tel|asia|post|swiss|([a-z]{2,6})){1})|([uU][rR][nN][:][a-zA-Z0-9-]{1,32}[:]([a-zA-Z0-9\()+,-.:=@;$_!*\'/?#]|[\%][a-fA-F0-9]{2})+)|(((/|../|./)*)?([/]?[a-zA-Z0-9])*([#][a-zA-Z0-9]+)?))$";
 	}
 	else if (type == "language") 
 	{
@@ -115,15 +104,15 @@ std::string customEntry::getRegEx
 	}
 	else if (type == "gYear") 
 	{
-		return "^([+-]?(0|[1-9][0-9]{0,9}|[1-3][0-9]{10}|40000000000))([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
+		return "^([+-]?(0|[1-9][0-9]{0,9}|[1-3][0-9]{10}|40000000000)){1}([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
 	}
 	else if (type == "date") 
 	{
-		return "^([+-]?(0|[1-9][0-9]{0,9}|[1-3][0-9]{10}|40000000000))[-](0[1-9]|1[0-2])[-](0[1-9]|1[0-9]|2[0-9]|3[0-1])([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
+		return "^([+-]?(0|[1-9][0-9]{0,9}|[1-3][0-9]{10}|40000000000)){1}[-]{1}(0[1-9]|1[0-2]){1}[-]{1}(0[1-9]|1[0-9]|2[0-9]|3[0-1]){1}([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
 	}
 	else if (type == "time") 
 	{
-		return "^(0[0-9]|1[0-9]|2[0-3])[:](0[0-9]|[1-5][0-9])[:](0[0-9]|[1-5][0-9])([.][0-9]{1,5})?([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
+		return "^(0[0-9]|1[0-9]|2[0-3]){1}[:]{1}(0[0-9]|[1-5][0-9]){1}[:]{1}(0[0-9]|[1-5][0-9]){1}([.][0-9]{1,5})?([Z]|([+-]{1}(00|0[1-9]|1[0-2])[:](00|0[1-9]|[1-5][0-9])))?$";
 	}
 	else if (type == "duration") 
 	{
@@ -146,4 +135,12 @@ std::string customEntry::getRegEx
 		return "^((0[xX])?[0-9a-fA-F]+){1}$";
 	}
 	return "";
+}
+
+void customEntry::insert_text_handler
+(
+	void
+)
+{
+	std::cout<<"i'm inserting some text..."<<regex->match(get_value())<<std::endl;
 }

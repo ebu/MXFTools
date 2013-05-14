@@ -202,7 +202,7 @@ class metadataEngine {
 		Glib::RefPtr<Gtk::TextBuffer> assistantNodeChildrenBuffer;
 		Gtk::Entry * attributeNameEntry;
 		Gtk::ComboBoxText * attributeComboBoxText;
-		Gtk::Entry * attributeValueEntry;
+		customEntry * attributeValueEntry;
 		Gtk::Entry * tagValueEntry;
 		bool addNode_type;
 		std::string mxffilename; /*!< mxffilename Pointer to store temporarly the current played node */

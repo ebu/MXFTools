@@ -26,7 +26,8 @@ class customEntry : public Gtk::Entry
 	
 		customEntry
 		(
-			std::string expression
+			std::string expression,
+	 		std::string placeholder
 		);
 		
 		~customEntry
@@ -39,22 +40,29 @@ class customEntry : public Gtk::Entry
 			void
 		) const;
 		
-		std::string get_value
+		Glib::ustring get_value
 		(
 			void
 		);
 		
 		void set_value
 		(
-			std::string value
+			Glib::ustring value
 		);
 	protected:
 	
 		bool m_error;
+		sigc::connection insert_text_connection;
+		Glib::RefPtr<Glib::Regex> regex;
 		
 		std::string getRegEx
 		(
 			std::string type
+		);
+		
+		void insert_text_handler
+		(
+			void
 		);
 };
 

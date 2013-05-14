@@ -1044,6 +1044,7 @@ void metadataEngine::on_attribute_changed
 		} 
 		default :
 		{
+			delete attributeValueEntry;
 			destinationBox->show();
 			for (std::list<EBUCoreFeatures::AttributeStruct>::iterator it=ebucoreRef.attribute.begin() ; it != ebucoreRef.attribute.end(); ++it) 
 			{
@@ -1051,21 +1052,15 @@ void metadataEngine::on_attribute_changed
 				if (attr.name == attributeComboBoxText->get_active_text())
 				{
 					// instanciate a new entry
-					customEntry * CE = new customEntry
+					attributeValueEntry = new customEntry
 					(
-						attr.type
+						attr.type, "Set the "+attr.name+" value"
 					);
-
-					//if (CE->getResponse() == Gtk::RESPONSE_OK) 
-					//{
-					//}
-					delete CE;
-				
-					std::cout<<"type 2 : "<<attr.type<<std::endl;
+					destinationBox->add(*attributeValueEntry);
+					attributeValueEntry->show();
 					break;
 				}
 			}
-			attributeValueEntry->set_text(genericFeatures::int2str(attributeComboBoxText->get_active_row_number()));
 		}
 	}
 }
@@ -1116,11 +1111,6 @@ void metadataEngine::addNodeAttribute
 	Gtk::Label * attributeValueTitle = manage(new Gtk::Label("Value :")); 
 
 //ebucoreRef
-
-	attributeNameEntry = manage(new Gtk::Entry());
-	attributeValueEntry = manage(new Gtk::Entry());
-	attributeValueEntry->set_placeholder_text("Set the attribute's value");
-
 	page1hbox1->add(*attributeNameTitle);
 	page1hbox1->add(*page1hbox1space1);
 	page1hbox1->add(*attributeComboBoxText);
@@ -1133,7 +1123,6 @@ void metadataEngine::addNodeAttribute
 	
 	page1hbox3->add(*attributeValueTitle);
 	page1hbox3->add(*page1hbox3space1);
-	page1hbox3->add(*attributeValueEntry);
 	page1hbox3->show_all_children();
 	
 
@@ -1409,20 +1398,37 @@ void metadataEngine::on_addAttribute_assistant_apply
 	Glib::RefPtr<Gtk::ListStore> metadataStore
 )
 {
-	int cpt = 0;
-	for (Gtk::TreeNodeChildren::iterator row = metadataStore->children().begin(); row != metadataStore->children().end();row++) {
-			cpt++;
+	unsigned int nb = metadataStore->children().size();
+	bool add = true;
+	
+	for (unsigned int i = 0; i<nb; i++)
+	{
+		//Gtk::TreeModel::Row row = *(metadataNodeChildrenStore->prepend());
+		if (metadataStore->children()[i][metadataNodeAttributesColumns.metadataNodeAttributeNameCol] == attributeComboBoxText->get_active_text()) {
+			metadataStore->children()[i][metadataNodeAttributesColumns.metadataNodeAttributeValueCol] = attributeValueEntry->get_value();
+			metadataStore->children()[i][metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol] = "lightgreen";
+			add=false;
+			break;
 		}
-	Gtk::TreeModel::Row row = *(metadataStore->prepend());
-	row[metadataNodeAttributesColumns.metadataNodeAttributeIdCol] = cpt;
-	row[metadataNodeAttributesColumns.metadataNodeAttributeNameCol] = attributeNameEntry->get_text();
-	row[metadataNodeAttributesColumns.metadataNodeAttributeValueCol] = attributeValueEntry->get_text();
-	row[metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol] = "lightgreen";
-
-	elReferences.at(previousnodepos)->setAttribute(xercesc::XMLString::transcode(attributeNameEntry->get_text().c_str()), xercesc::XMLString::transcode(attributeValueEntry->get_text().c_str()));
-
-	delete attributeNameEntry;
-	delete attributeValueEntry;
+	}
+	if (add) {
+		Gtk::TreeModel::Row row = *(metadataStore->prepend());
+		row[metadataNodeAttributesColumns.metadataNodeAttributeIdCol] = nb;
+		row[metadataNodeAttributesColumns.metadataNodeAttributeNameCol] = attributeComboBoxText->get_active_text();
+		row[metadataNodeAttributesColumns.metadataNodeAttributeValueCol] = attributeValueEntry->get_value();
+		row[metadataNodeAttributesColumns.metadataNodeAttributeBgColorCol] = "lightgreen";
+	}	
+	elReferences.at(previousnodepos)->setAttribute
+	(
+		xercesc::XMLString::transcode
+		(
+			attributeComboBoxText->get_active_text().c_str()
+		), 
+		xercesc::XMLString::transcode
+		(
+			(attributeValueEntry->get_value()).c_str()
+		)
+	);
 }
 
 void metadataEngine::on_assistant_cancel
