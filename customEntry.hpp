@@ -19,6 +19,9 @@
 #include <string>
 #include <glibmm.h>
 #include <gtkmm/entry.h> 
+#include <gdkmm/screen.h> 
+#include <gtkmm/cssprovider.h> 
+#include <gtkmm/stylecontext.h> 
 
 class customEntry : public Gtk::Entry
 {
@@ -54,6 +57,11 @@ class customEntry : public Gtk::Entry
 		bool m_error;
 		sigc::connection insert_text_connection;
 		Glib::RefPtr<Glib::Regex> regex;
+		
+		
+		Glib::ustring data;
+		Glib::RefPtr<Gtk::CssProvider> css;
+		Glib::RefPtr<Gtk::StyleContext> style_context;
 		
 		std::string getRegEx
 		(

@@ -27,8 +27,20 @@ customEntry::customEntry
 	set_width_chars(32);
 	set_value("");
 	set_placeholder_text(placeholder);
+	set_name("attributeEntry");
 	
-	insert_text_connection = signal_changed().connect
+	
+	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
+	css = Gtk::CssProvider::create();
+	
+	if(not css->load_from_data(data)) {
+		std::cout << "Failed to load css"<<std::endl;
+	}
+	
+   style_context = get_style_context();
+	style_context->add_provider(css, GTK_STYLE_PROVIDER_PRIORITY_USER);
+	
+	signal_changed().connect
 	(
 		sigc::mem_fun
 		(
@@ -142,5 +154,15 @@ void customEntry::insert_text_handler
 	void
 )
 {
-	std::cout<<"i'm inserting some text..."<<regex->match(get_value())<<std::endl;
+	if (regex->match(get_value()))
+	{
+	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
+	}
+	else
+	{
+	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
+	}
+	if(not css->load_from_data(data)) {
+		std::cout << "Failed to load css"<<std::endl;
+	}
 }
