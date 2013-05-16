@@ -55,11 +55,9 @@ class customEntry : public Gtk::Entry
 	protected:
 	
 		bool m_error;
-		sigc::connection insert_text_connection;
+		
 		Glib::RefPtr<Glib::Regex> regex;
-		
-		
-		Glib::ustring data;
+		std::string sample;
 		Glib::RefPtr<Gtk::CssProvider> css;
 		Glib::RefPtr<Gtk::StyleContext> style_context;
 		
@@ -71,6 +69,16 @@ class customEntry : public Gtk::Entry
 		void insert_text_handler
 		(
 			void
+		);
+		
+		void statechanged
+		(
+			Gtk::StateType s 
+		);
+		
+		void stateflagschanged
+		(
+			Gtk::StateFlags f
 		);
 };
 

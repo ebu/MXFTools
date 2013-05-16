@@ -22,18 +22,16 @@ customEntry::customEntry
 {
 
 	regex = Glib::Regex::create(getRegEx(expression));
-	set_visibility(true);
+	//set_visibility(true);
 	set_max_length(256);
 	set_width_chars(32);
 	set_value("");
 	set_placeholder_text(placeholder);
-	set_name("attributeEntry");
+	set_name("MetadataEditorAttributeEntryEmpty");
 	
 	
-	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
 	css = Gtk::CssProvider::create();
-	
-	if(not css->load_from_data(data)) {
+	if(not css->load_from_path("css.css")) {
 		std::cout << "Failed to load css"<<std::endl;
 	}
 	
@@ -80,22 +78,32 @@ std::string customEntry::getRegEx
 {
 	if (type == "boolean") 
 	{
+		sample = "i.e. false\n\
+							true\n\
+							0\n\
+							1";
 		return "(^((false)|(true)|(False)|(True)|(FALSE)|(TRUE)|(0)|(1))$){1}";
 	}
 	else if (type == "integer") 
 	{
+		sample = "i.e. from minus infinite to plus infinite";
 		return "^([-+]?([0-9]{1}|[1-9]{1}[0-9]*))$";
 	}
 	else if (type == "positiveInteger") 
 	{
+		sample = "i.e. from 1 to infinite";
 		return "^([1-9]{1}|[1-9]{1}[0-9]*)$";
+				"^([:digit:^0]{1}|[:digit:^0]{1}[:digit:]*)$"
+				"^([1-9][0-9]*)$"
 	}
 	else if (type == "nonNegativeInteger") 
 	{
+		sample = "i.e. from 0 to infinite";
 		return "^([0-9]{1}|[1-9]{1}[0-9]*)$";
 	}
 	else if (type == "long") 
 	{
+		sample = "i.e. from -9223372036854775808 to 9223372036854775807";
 		return "^(0|[-+]?([1-9][0-9]{0,17}|[1-8][0-9]{18}|9([01][0-9]{17}|2([01][0-9]{16}|2([0-2][0-9]{15}|3([0-2][0-9]{14}|3([0-6][0-9]{13}|7([01][0-9]{12}|20([0-2][0-9]{10}|3([0-5][0-9]{9}|6([0-7][0-9]{8}|8([0-4][0-9]{7}|5([0-3][0-9]{6}|4([0-6][0-9]{5}|7([0-6][0-9]{4}|7([0-4][0-9]{3}|5([0-7][0-9]{2}|80[0-7]))))))))))))))))|-9223372036854775808)$";
 	}
 	else if (type == "float") 
@@ -156,13 +164,10 @@ void customEntry::insert_text_handler
 {
 	if (regex->match(get_value()))
 	{
-	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
+		set_name("MetadataEditorAttributeEntryRight");
 	}
 	else
 	{
-	data = "GtkEntry#attributeEntry {background-color: #FF0000;}";
-	}
-	if(not css->load_from_data(data)) {
-		std::cout << "Failed to load css"<<std::endl;
+		set_name("MetadataEditorAttributeEntryWrong");
 	}
 }
