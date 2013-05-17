@@ -203,6 +203,7 @@ class metadataEngine {
 		Gtk::Entry * attributeNameEntry;
 		Gtk::ComboBoxText * attributeComboBoxText;
 		customEntry * attributeValueEntry;
+		Gtk::Label * attributeValueSample;
 		Gtk::Entry * tagValueEntry;
 		bool addNode_type;
 		std::string mxffilename; /*!< mxffilename Pointer to store temporarly the current played node */
@@ -343,7 +344,8 @@ class metadataEngine {
 		
 		void on_attribute_changed
 		(
-			Gtk::Box * destinationBox
+			Gtk::Box * attributeValueBox,
+			Gtk::Box * attributeSampleBox
 		);
 		
 		void addNodeAttribute // virtual

@@ -1032,20 +1032,22 @@ void metadataEngine::configureNodeEditionButtonsTreeview
 
 void metadataEngine::on_attribute_changed
 (
-	Gtk::Box * destinationBox
+	Gtk::Box * attributeValueBox,
+	Gtk::Box * attributeSampleBox
 )
 {
 	switch (attributeComboBoxText->get_active_row_number()) 
 	{
 		case 0:
 		{
-			destinationBox->hide();
+			attributeValueBox->hide();
+			attributeSampleBox->hide();
 			break;
 		} 
 		default :
 		{
 			delete attributeValueEntry;
-			destinationBox->show();
+			attributeValueBox->show();
 			for (std::list<EBUCoreFeatures::AttributeStruct>::iterator it=ebucoreRef.attribute.begin() ; it != ebucoreRef.attribute.end(); ++it) 
 			{
 				EBUCoreFeatures::AttributeStruct attr = *it;
@@ -1056,8 +1058,14 @@ void metadataEngine::on_attribute_changed
 					(
 						attr.type, "Set the "+attr.name+" value"
 					);
-					destinationBox->add(*attributeValueEntry);
+					attributeValueBox->add(*attributeValueEntry);
 					attributeValueEntry->show();
+					attributeValueSample = manage(new Gtk::Label(attributeValueEntry->get_sample()));
+					attributeSampleBox->add(*attributeValueSample);
+					attributeValueSample->show();
+					attributeSampleBox->show();
+					//attributeValueSample->set_text();
+					//attributeValueSample->show();
 					break;
 				}
 			}
@@ -1075,12 +1083,13 @@ void metadataEngine::addNodeAttribute
 	metadataAssistant->set_modal(true);
 	metadataAssistant->set_title("Add a node attribute");
 
-	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
+	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
 
 ////////////// page 1
 	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
 	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));	
 	Gtk::Box * page1hbox3 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
+	Gtk::Box * page1hbox4 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));	
 
 	Gtk::AspectFrame * page1hbox1space1 = manage(new Gtk::AspectFrame());
 	Gtk::AspectFrame * page1hbox2space1 = manage(new Gtk::AspectFrame());
@@ -1091,14 +1100,15 @@ void metadataEngine::addNodeAttribute
 	attributeComboBoxText = manage (new Gtk::ComboBoxText(false));
 	attributeComboBoxText->signal_changed().connect
 	(
-		sigc::bind<Gtk::Box *>
+		sigc::bind<Gtk::Box *, Gtk::Box *>
 		(
 			sigc::mem_fun
 			(
 				*this,
 				&metadataEngine::on_attribute_changed
 			) ,
-			page1hbox3
+			page1hbox3,
+			page1hbox4
 		)
 	);
 	attributeComboBoxText->append("Select an attribute");
@@ -1125,10 +1135,13 @@ void metadataEngine::addNodeAttribute
 	page1hbox3->add(*page1hbox3space1);
 	page1hbox3->show_all_children();
 	
+	page1hbox3->hide();
+	page1hbox4->hide();
 
 	page1->add(*page1hbox1);
 	page1->add(*page1hbox2);
 	page1->add(*page1hbox3);
+	page1->add(*page1hbox4);
 	page1->show_all_children();
 
 
@@ -1167,7 +1180,6 @@ void metadataEngine::addNodeAttribute
 	);
 
 	metadataAssistant->show_all_children();
-	page1hbox3->hide();
 	metadataAssistant->show();
   	//add to the treeview
 }

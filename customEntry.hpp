@@ -52,12 +52,18 @@ class customEntry : public Gtk::Entry
 		(
 			Glib::ustring value
 		);
+		
+		Glib::ustring get_sample
+		(
+			void
+		);
+		
 	protected:
 	
 		bool m_error;
 		
 		Glib::RefPtr<Glib::Regex> regex;
-		std::string sample;
+		Glib::ustring sample;
 		Glib::RefPtr<Gtk::CssProvider> css;
 		Glib::RefPtr<Gtk::StyleContext> style_context;
 		
