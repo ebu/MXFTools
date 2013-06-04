@@ -40,6 +40,8 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/switch.h>
 #include <gtkmm/comboboxtext.h>
+#include <gtkmm/cssprovider.h> 
+#include <gtkmm/stylecontext.h>
 // glib/glibmm
 #include <glibmm/miscutils.h>
 
@@ -90,9 +92,15 @@ class metadataEngine {
 		
 		void setRightSide
 		(
-			std::string filename
+			std::string filename,
+			bool createNew = false
 		);
 		
+		void constructTreeViewNew
+		(
+			std::string MXFFile
+		);
+
 		void constructTreeViewFromXML
 		(
 			std::string XMLfile
@@ -140,6 +148,22 @@ class metadataEngine {
 		void exportXMLEBUCore
 		(
 			std::string XMLEBUCoreOutputFilename
+		);
+		
+		void reportMetadata
+		(
+			std::string MXFInputFilename,
+			std::string XMLOutputFilename
+		);
+		void reportMux
+		(
+			std::string MXFInputFilename,
+			std::string XMLOutputFilename
+		);
+		void reportDeep
+		(
+			std::string MXFInputFilename,
+			std::string XMLOutputFilename
 		);
 		
 		unsigned int getViewportSize
@@ -201,12 +225,20 @@ class metadataEngine {
 		Glib::RefPtr<Gtk::TextBuffer> assistantTextBuffer;
 		Glib::RefPtr<Gtk::TextBuffer> assistantNodeChildrenBuffer;
 		Gtk::Entry * attributeNameEntry;
-		Gtk::ComboBoxText * attributeComboBoxText;
+		Gtk::ComboBoxText * addComboBoxText;
 		customEntry * attributeValueEntry;
+		Gtk::EventBox *eventShowSample;
+		Gtk::Label * attributeValueDescription;
 		Gtk::Label * attributeValueSample;
+		Gtk::Box * attributeValueBox;
 		Gtk::Entry * tagValueEntry;
 		bool addNode_type;
-		std::string mxffilename; /*!< mxffilename Pointer to store temporarly the current played node */
+		std::string mxffilename; /*!< mxffilename  */
+		std::string ebucorename; /*!< ebucorename  */
+		
+		std::vector<std::string> attributeList;
+		std::vector<std::string> nodeList;
+		
 		
 		//left side widgets
 		Gtk::ScrolledWindow * FirstScrolledWindowBox; /*!< FirstScrolledWindowBox */
@@ -236,6 +268,10 @@ class metadataEngine {
 		EBUCoreFeatures * SDKWrapper;
 		xercesc::DOMDocument* xercescdoc;
 		EBUCoreFeatures::ElementStruct ebucoreRef;
+		
+		
+		//Glib::RefPtr<Gtk::CssProvider> css;
+		//Glib::RefPtr<Gtk::StyleContext> style_context;
 	
 	
 		void on_EBUCoreSet_changed
@@ -243,6 +279,11 @@ class metadataEngine {
 			void
 		);
 		
+		void reconstructTreeView
+		(
+			void
+		);
+
 		void recursiveConstructTreeView
 		(
 			xercesc::DOMElement * el, 
@@ -312,6 +353,13 @@ class metadataEngine {
 			Gtk::Label * txtLabel
 		);
 		
+		bool on_press_sample
+		(
+			GdkEventButton* event, 
+			Gtk::EventBox *evLabel, 
+			Gtk::Label * txtLabel
+		);
+		
 		void configureNodeAttributesTreeview
 		(
 			xercesc::DOMNamedNodeMap *dom_attrs, 
@@ -344,8 +392,17 @@ class metadataEngine {
 		
 		void on_attribute_changed
 		(
-			Gtk::Box * attributeValueBox,
-			Gtk::Box * attributeSampleBox
+			void
+		);
+		
+		std::string get_attribute_value
+		(
+			std::string name
+		);
+		
+		void on_node_changed
+		(
+			void
 		);
 		
 		void addNodeAttribute // virtual
@@ -392,6 +449,18 @@ class metadataEngine {
 		void on_addNode_assistant_apply
 		(
 			Glib::RefPtr<Gtk::ListStore> metadataStore
+		);
+
+		bool cardinalityAllows
+		(
+			std::string name,
+			int max, 
+			Glib::RefPtr<Gtk::ListStore> store
+		);
+
+		void on_textnode_changed
+		(
+			std::string text
 		);
 };
 

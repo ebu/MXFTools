@@ -19,7 +19,8 @@
 #include <string>
 #include <glibmm.h>
 #include <gtkmm/entry.h> 
-#include <gdkmm/screen.h> 
+#include <gtkmm/label.h> 
+//#include <gdkmm/screen.h> 
 #include <gtkmm/cssprovider.h> 
 #include <gtkmm/stylecontext.h> 
 
@@ -30,7 +31,8 @@ class customEntry : public Gtk::Entry
 		customEntry
 		(
 			std::string expression,
-	 		std::string placeholder
+	 		std::string placeholder,
+	 		std::string value = ""
 		);
 		
 		~customEntry
@@ -53,7 +55,12 @@ class customEntry : public Gtk::Entry
 			Glib::ustring value
 		);
 		
-		Glib::ustring get_sample
+		Gtk::Label * get_sample
+		(
+			void
+		);
+		
+		Gtk::Label * get_description
 		(
 			void
 		);
@@ -63,7 +70,9 @@ class customEntry : public Gtk::Entry
 		bool m_error;
 		
 		Glib::RefPtr<Glib::Regex> regex;
+		Glib::ustring description;
 		Glib::ustring sample;
+		Glib::RefPtr<Gdk::Screen> screen;
 		Glib::RefPtr<Gtk::CssProvider> css;
 		Glib::RefPtr<Gtk::StyleContext> style_context;
 		

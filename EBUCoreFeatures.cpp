@@ -180,6 +180,68 @@ void EBUCoreFeatures::WrapEBUCore
 	);
 }
 
+
+void EBUCoreFeatures::reportEBUCoreSTMetadata
+(
+	std::string MXFFilename,
+	std::string XMLFilename
+)
+{
+	EBUSDK::Analyzer::AnalyzerConfig cfg;
+	cfg.AnalysisType = EBUSDK::Analyzer::AnalyzerConfig::METADATA;
+	cfg.MetadataAnalysisType = EBUSDK::Analyzer::AnalyzerConfig::LOGICAL;
+	cfg.DeepIndexTableAnalysis = false;
+	
+	EBUSDK::Analyzer::AnalyzeMXFFile 	
+	(
+		MXFFilename.c_str(), 
+		XMLFilename.c_str(),
+		cfg
+	);
+}
+
+void EBUCoreFeatures::reportEBUCoreSTMux
+(
+	std::string MXFFilename,
+	std::string XMLFilename
+)
+{
+	EBUSDK::Analyzer::AnalyzerConfig cfg;
+	cfg.AnalysisType = EBUSDK::Analyzer::AnalyzerConfig::MXF_MUX;
+	cfg.MetadataAnalysisType = EBUSDK::Analyzer::AnalyzerConfig::LOGICAL;
+	cfg.DeepIndexTableAnalysis = false;
+	
+	
+	EBUSDK::Analyzer::AnalyzeMXFFile 	
+	(
+		MXFFilename.c_str(), 
+		XMLFilename.c_str(),
+		cfg
+	);
+}
+
+
+
+void EBUCoreFeatures::reportEBUCoreSTDeep
+(
+	std::string MXFFilename,
+	std::string XMLFilename
+)
+{
+	EBUSDK::Analyzer::AnalyzerConfig cfg;
+	cfg.AnalysisType = EBUSDK::Analyzer::AnalyzerConfig::METADATA;
+	cfg.MetadataAnalysisType = EBUSDK::Analyzer::AnalyzerConfig::LOGICAL;
+	cfg.DeepIndexTableAnalysis = true;
+	
+	
+	EBUSDK::Analyzer::AnalyzeMXFFile 	
+	(
+		MXFFilename.c_str(), 
+		XMLFilename.c_str(),
+		cfg
+	);
+}
+
 xercesc::DOMDocument * EBUCoreFeatures::getEBUCore
 (
 	void

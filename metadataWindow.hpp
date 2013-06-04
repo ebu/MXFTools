@@ -14,7 +14,12 @@
  *
  */
 
+
 #include <gtkmm.h>
+
+#include <gtkmm/cssprovider.h> 
+#include <gtkmm/stylecontext.h>
+
 #include <iostream>
 #include <string>
 #include <boost/regex.hpp>
@@ -66,10 +71,11 @@ protected:
 	// gtk button
 	Gtk::Switch* switchEBUCoreEdition; /*!< switchEBUCoreEdition edition mode button */
 	
-	
+	Gtk::Button* createEBUCore;
 	Gtk::MenuButton* removeEBUCore; /*!< disable edition mode button */
 	Gtk::MenuButton* importEBUCore; /*!< import an EBUCore file button */
 	Gtk::MenuButton* exportEBUCore; /*!< export an EBUCore file button */
+	Gtk::MenuButton* generateEBUCoreST434; /*!< export an EBUCore file button */
 	
 	// Menu, UIManager and ActionGroups
 	Gtk::Menu* importEBUCoreMenuPopup;
@@ -77,16 +83,20 @@ protected:
 	Gtk::Menu* importEBUCoreMXFMenuPopup;
 	Gtk::Menu* exportEBUCoreMenuPopup;
 	Gtk::Menu* removeEBUCoreMenuPopup;
+	Gtk::Menu* generateEBUCoreST434MenuPopup;
 	Glib::RefPtr<Gtk::UIManager> importEBUCoreUIManager;
 	Glib::RefPtr<Gtk::UIManager> importEBUCoreXMLUIManager;
 	Glib::RefPtr<Gtk::UIManager> importEBUCoreMXFUIManager;
 	Glib::RefPtr<Gtk::UIManager> exportEBUCoreUIManager;
 	Glib::RefPtr<Gtk::UIManager> removeEBUCoreUIManager;
+	Glib::RefPtr<Gtk::UIManager> generateEBUCoreST434UIManager;
 	Glib::RefPtr<Gtk::ActionGroup> importEBUCoreActionGroup;
 	Glib::RefPtr<Gtk::ActionGroup> importEBUCoreXMLActionGroup;
 	Glib::RefPtr<Gtk::ActionGroup> importEBUCoreMXFActionGroup;
 	Glib::RefPtr<Gtk::ActionGroup> exportEBUCoreActionGroup;
 	Glib::RefPtr<Gtk::ActionGroup> removeEBUCoreActionGroup;
+	Glib::RefPtr<Gtk::ActionGroup> generateEBUCoreST434ActionGroup;
+	
 	
 	// window widgets
 	Gtk::Viewport* viewportTree; /*!< viewportTree the Gtk Viewport where is stored the expander */
@@ -106,6 +116,10 @@ protected:
 	
 	// engine
 	metadataEngine * engine;
+	
+	//css
+//	Glib::RefPtr<Gtk::CssProvider> css;
+//	Glib::RefPtr<Gtk::StyleContext> style_context;
 	
 	/**
 	* @fn void refGladeWidgets(const Glib::RefPtr<Gtk::Builder>& refGlade)
@@ -160,7 +174,18 @@ protected:
 	(
 		void
 	);
-	
+	/**
+	* @fn void on_createEBUCore_clicked(void)
+	* @brief
+	* @brief
+	* @note needs more documentation
+	* @return nothing if all is right or an error at compilation time.
+	*/
+	void on_createEBUCore_clicked
+	(
+		void
+	);
+
 	/**
 	* @fn void on_importEBUCore_clicked(void)
 	* @brief
@@ -266,6 +291,19 @@ protected:
 	(
 		void
 	);	
+	
+	void on_generateEBUCoreST434Metadata_clicked
+	(
+		void
+	);
+	void on_generateEBUCoreST434Mux_clicked
+	(
+		void
+	);
+	void on_generateEBUCoreST434Deep_clicked
+	(
+		void
+	);
 	
 	/**
 	* @fn void initMetadataMenuPopup(void)

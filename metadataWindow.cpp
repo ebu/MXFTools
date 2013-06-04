@@ -29,6 +29,16 @@ metadataWindow::metadataWindow
 	initMetadataWindow();
 	initRightSide();
 	connectSignals(); // clicked buttons
+	
+	//css style
+	//css = Gtk::CssProvider::create();
+	//if(not css->load_from_path("css.css")) {
+	//	std::cout << "Failed to load css"<<std::endl;
+	//}
+	
+   //style_context = get_style_context();
+	//style_context->add_provider(css, GTK_STYLE_PROVIDER_PRIORITY_USER);
+	
 	engine = new metadataEngine
 	(
 		status,
@@ -44,9 +54,11 @@ metadataWindow::metadataWindow
 		boxStatus,
 		expanderRoot,
 		viewportTree,
-		switchEBUCoreEdition
+		switchEBUCoreEdition//,
+		//style_context
 	);
 	set_has_resize_grip();
+	
 }
 
 // class destructor
@@ -68,6 +80,11 @@ void metadataWindow::refGladeButton
 	/* metadata control buttons */
 	refGlade->get_widget
 	(
+		"createEBUCore", 
+		createEBUCore
+	);	
+	refGlade->get_widget
+	(
 		"importEBUCore", 
 		importEBUCore
 	);	
@@ -80,6 +97,11 @@ void metadataWindow::refGladeButton
 	(
 		"removeEBUCore", 
 		removeEBUCore
+	);
+	refGlade->get_widget
+	(
+		"generateEBUCoreST434", 
+		generateEBUCoreST434
 	);
 	refGlade->get_widget
 	(
@@ -131,6 +153,25 @@ void metadataWindow::connectSignals
 	void
 )
 {
+
+	createEBUCore->signal_clicked().connect
+	(
+		sigc::mem_fun
+		(
+			*this, 
+			&metadataWindow::on_createEBUCore_clicked
+		)
+	);
+
+}
+
+void metadataWindow::on_createEBUCore_clicked
+(
+	void
+)
+{
+	engine->constructTreeViewNew("ebucoreSet.xml");
+	engine->setRightSide("ebucoreSet.xml", true);
 }
 
 void metadataWindow::on_importEBUCore_clicked
@@ -273,16 +314,16 @@ void metadataWindow::on_embedEBUCore_clicked
 	metadataEncapsulationDialog * MetadataExportDialog = new metadataEncapsulationDialog 
 	(
 		*this, 
-		"Embed current EBUCore metadatas into current MXF file",
+		"Embed current EBUCore metadatas into an XML file",
 		"",
+		"Set the output XML file :",
 		"",
+		"Save as",
 		"",
-		"",
-		"",
-		"",
-		false,
+		"Set the output XML filename...",
 		false,
 		true,
+		false,
 		true
 	);
 	
@@ -347,6 +388,87 @@ void metadataWindow::on_exportEBUCore_clicked
 	delete MetadataExportDialog;
 }
 
+
+
+void metadataWindow::on_generateEBUCoreST434Metadata_clicked
+(
+	void
+)
+{
+		// instanciate a new local filechooser
+	genericFilechooserInputOutput * FCIO = new genericFilechooserInputOutput
+	(
+		*this,
+		"Generate a ST434 metadata report",
+		"Select the input MXF file :",
+		"Save the output XML EBUCore file into :",
+		"Extract from ...",
+		"Save as ...",
+		"Set the input path to the MXF EBUCore file...",
+		"Set the output path to the XML EBUCore file...",
+		true
+	);
+	
+	if (FCIO->getResponse() == Gtk::RESPONSE_OK) 
+	{
+		engine->reportMetadata(FCIO->getInputPath(),FCIO->getOutputPath());
+	}
+	
+	delete FCIO;
+}
+void metadataWindow::on_generateEBUCoreST434Mux_clicked
+(
+	void
+)
+{
+		// instanciate a new local filechooser
+	genericFilechooserInputOutput * FCIO = new genericFilechooserInputOutput
+	(
+		*this,
+		"Generate a ST434 full report",
+		"Select the input MXF file :",
+		"Save the output XML EBUCore file into :",
+		"Extract from ...",
+		"Save as ...",
+		"Set the input path to the MXF EBUCore file...",
+		"Set the output path to the XML EBUCore file...",
+		true
+	);
+	
+	if (FCIO->getResponse() == Gtk::RESPONSE_OK) 
+	{
+		engine->reportMux(FCIO->getInputPath(),FCIO->getOutputPath());
+	}
+	
+	delete FCIO;
+}
+void metadataWindow::on_generateEBUCoreST434Deep_clicked
+(
+	void
+)
+{
+		// instanciate a new local filechooser
+	genericFilechooserInputOutput * FCIO = new genericFilechooserInputOutput
+	(
+		*this,
+		"Generate a ST434 table index report",
+		"Select the input MXF file :",
+		"Save the output XML EBUCore file into :",
+		"Extract from ...",
+		"Save as ...",
+		"Set the input path to the MXF EBUCore file...",
+		"Set the output path to the XML EBUCore file...",
+		true
+	);
+	
+	if (FCIO->getResponse() == Gtk::RESPONSE_OK) 
+	{
+		engine->reportDeep(FCIO->getInputPath(),FCIO->getOutputPath());
+	}
+	
+	delete FCIO;
+}
+
 void metadataWindow::initMetadataMenuPopup
 (
 	void
@@ -357,10 +479,12 @@ void metadataWindow::initMetadataMenuPopup
 	importEBUCoreActionGroup = Gtk::ActionGroup::create();
 	exportEBUCoreActionGroup = Gtk::ActionGroup::create();
 	removeEBUCoreActionGroup = Gtk::ActionGroup::create();
+	generateEBUCoreST434ActionGroup = Gtk::ActionGroup::create();
 	//Add a new item action menu to the action group
 	importEBUCoreActionGroup->add(Gtk::Action::create("importEBUCoreMenu", "Import an EBUCore File ..."));
 	exportEBUCoreActionGroup->add(Gtk::Action::create("exportEBUCoreMenu", "Save / Export ..."));
-	exportEBUCoreActionGroup->add(Gtk::Action::create("removeEBUCoreMenu", "emove EBUCore metadatas from MXF file..."));
+	removeEBUCoreActionGroup->add(Gtk::Action::create("removeEBUCoreMenu", "Remove EBUCore metadatas from MXF file..."));
+	generateEBUCoreST434ActionGroup->add(Gtk::Action::create("generateEBUCoreST434Menu", "Parse MXF file and generate ST434 report..."));
 	// add new menu items with their own action menu, a keyboard shortcut 
 	// and a listener ; open a new playlist or append a playlist to the 
 	// current playlist
@@ -596,17 +720,72 @@ void metadataWindow::initMetadataMenuPopup
 			&metadataWindow::on_saveAndRemoveEBUCore_clicked
 		)
 	);
+	
+	/// report st434
+	
+	generateEBUCoreST434ActionGroup->add
+	(
+		
+		Gtk::Action::create
+		(
+			"generateEBUCoreST434Metadata", 
+			Gtk::Stock::ADD, 
+			"Metadata analysis only", 
+			"Perform only a metadata analysis"
+		),
+		sigc::mem_fun
+		(
+			*this, 
+			&metadataWindow::on_generateEBUCoreST434Metadata_clicked
+		)
+	);
+
+	generateEBUCoreST434ActionGroup->add
+	(
+		
+		Gtk::Action::create
+		(
+			"generateEBUCoreST434Mux", 
+			Gtk::Stock::ADD, 
+			"Analysis of the entire MXF file", 
+			"Perform an analysis on the entire MXF file mux"
+		),
+		sigc::mem_fun
+		(
+			*this, 
+			&metadataWindow::on_generateEBUCoreST434Mux_clicked
+		)
+	);
+	generateEBUCoreST434ActionGroup->add
+	(
+		
+		Gtk::Action::create
+		(
+			"generateEBUCoreST434Deep", 
+			Gtk::Stock::ADD, 
+			"Deep index table analysis", 
+			"Perform a deep index table analysis"
+		),
+		sigc::mem_fun
+		(
+			*this, 
+			&metadataWindow::on_generateEBUCoreST434Deep_clicked
+		)
+	);
 
 	importEBUCoreUIManager = Gtk::UIManager::create();
 	exportEBUCoreUIManager = Gtk::UIManager::create();
 	removeEBUCoreUIManager = Gtk::UIManager::create();
+	generateEBUCoreST434UIManager = Gtk::UIManager::create();
 	importEBUCoreUIManager->insert_action_group(importEBUCoreActionGroup);
 	exportEBUCoreUIManager->insert_action_group(exportEBUCoreActionGroup);
 	removeEBUCoreUIManager->insert_action_group(removeEBUCoreActionGroup);
+	generateEBUCoreST434UIManager->insert_action_group(generateEBUCoreST434ActionGroup);
 
 	add_accel_group(importEBUCoreUIManager->get_accel_group());
 	add_accel_group(exportEBUCoreUIManager->get_accel_group());
 	add_accel_group(removeEBUCoreUIManager->get_accel_group());
+	add_accel_group(generateEBUCoreST434UIManager->get_accel_group());
 
 	//Layout the actions in a menubar and toolbar:
 	Glib::ustring ui_info =
@@ -688,10 +867,34 @@ void metadataWindow::initMetadataMenuPopup
 	if(!removeEBUCoreMenuPopup)
 		g_warning("menu not found");
 		
+	//Layout the actions in a menubar and toolbar:
+	ui_info =
+		"<ui>"
+		"  <popup name='generateEBUCoreST434PopupMenu'>"
+		"    <menuitem action='generateEBUCoreST434Metadata'/>"
+		"    <menuitem action='generateEBUCoreST434Mux'/>"
+		"    <menuitem action='generateEBUCoreST434Deep'/>"
+		"  </popup>"
+		"</ui>";
+
+	try
+	{
+		generateEBUCoreST434UIManager->add_ui_from_string(ui_info);
+	} catch(const Glib::Error& ex) {
+		std::cerr << "building menus failed: " <<  ex.what();
+	}
+	generateEBUCoreST434MenuPopup = dynamic_cast<Gtk::Menu*>
+	(
+		generateEBUCoreST434UIManager->get_widget("/generateEBUCoreST434PopupMenu")
+	); 
+	if(!generateEBUCoreST434MenuPopup)
+		g_warning("menu not found");
+		
 	// set the popup
 	importEBUCore->set_popup(*importEBUCoreMenuPopup);
 	exportEBUCore->set_popup(*exportEBUCoreMenuPopup);
 	removeEBUCore->set_popup(*removeEBUCoreMenuPopup);
+	generateEBUCoreST434->set_popup(*generateEBUCoreST434MenuPopup);
 
 }
 

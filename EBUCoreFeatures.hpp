@@ -52,7 +52,15 @@
     // POSIX
 #endif
 
+#include <Analyzer.h>
+
+#include <MXFCustomMetadata.h>
+
 #include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
+
+
 #include <exception>
 #include <list>
 #include "genericFeatures.hpp"
@@ -113,6 +121,24 @@ class EBUCoreFeatures {
 			bool setHeader,
 			bool isDark,
 			bool isSidecar
+		);
+		
+		void reportEBUCoreSTMetadata
+		(
+			std::string MXFFilename,
+			std::string XMLFilename
+		);
+		
+		void reportEBUCoreSTMux
+		(
+			std::string MXFFilename,
+			std::string XMLFilename
+		);
+		
+		void reportEBUCoreSTDeep
+		(
+			std::string MXFFilename,
+			std::string XMLFilename
 		);
 		
 		void WrapEBUCore
