@@ -1,0 +1,7 @@
+bin_PROGRAMS =MXFTools
+MXFTools_SOURCES = remoteStreamFileChooser.hpp remoteStreamFileChooser.cpp playlistWindow.hpp playlistWindow.cpp playlistEngine.hpp playlistEngine.cpp playerWindow.hpp playerWindow.cpp playerEngine.hpp playerEngine.cpp mxfGeneratorWindow.hpp mxfGeneratorWindow.cpp metadataWindow.hpp metadataWindow.cpp metadataEngine.hpp metadataEngine.cpp metadataEncapsulationInputOutputDialog.hpp metadataEncapsulationInputOutputDialog.cpp metadataEncapsulationDialog.hpp metadataEncapsulationDialog.cpp main.cpp genericFilechooserWindow.hpp genericFilechooserWindow.cpp genericFilechooserInputOutput.hpp genericFilechooserInputOutput.cpp genericFeatures.hpp genericFeatures.cpp genericConfirmationWindow.hpp genericConfirmationWindow.cpp genericAlertWindow.hpp genericAlertWindow.cpp ebucoreParser.hpp ebucoreParser.cpp EBUCoreFeatures.hpp EBUCoreFeatures.cpp customEntry.hpp customEntry.cpp BMXMXFEngine.hpp BMXMXFEngine.cpp
+
+MXFTools_CPPFLAGS = @GTKMM30_CFLAGS@ @GDKMM30_CFLAGS@ @GSTREAMERMM010_CFLAGS@ @XERCESC_CFLAGS@ @LIBMXF10_CFLAGS@ @LIBMXF10_CFLAGS@ @BMX01_CFLAGS@ @EBUMXFSDK10_CFLAGS@
+MXFTools_LDADD = @GTKMM30_LIBS@ @GDKMM30_LIBS@ @GSTREAMERMM010_LIBS@ @XERCESC_LIBS@ @LIBMXF10_LIBS@ @LIBMXF10_LIBS@ @BMX01_LIBS@ @EBUMXFSDK10_LIBS@
+MXFTools_CXXFLAGS = -std=c++11 -W
+CLEANFILES = *~
