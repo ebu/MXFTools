@@ -1387,12 +1387,12 @@ bool EBUCoreFeatures::groupExist
   return false;
 }
 
-/*
 void EBUCoreFeatures::generateSkeletonElement
 (
 	EBUCoreFeatures::ElementStruct skeleton
 ) 
 {
+  //ebucoreStack.push_back(skeleton.name);
 	out<<"name "<<skeleton.name<<std::endl;
 	for (std::list<EBUCoreFeatures::ElementStruct>::iterator it=skeleton.children.begin() ; it != skeleton.children.end(); ++it) {
 		EBUCoreFeatures::ElementStruct child = *it;
@@ -1404,14 +1404,3 @@ void EBUCoreFeatures::generateSkeletonElement
 	}
 }
 
-
-void EBUCoreFeatures::generateSkeleton
-(
-	void
-) 
-{
-	out.open ("/home/marco/Dev/EBU-MP/example.txt");
-	generateSkeletonElement(ebucoremodel.at(0));
-	out.close();
-}
-*/
