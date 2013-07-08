@@ -287,7 +287,7 @@ class EBUCoreFeatures {
 			xercesc::DOMElement * el
 		);
 		
-		void generateSkeletonElement
+/*		void generateSkeletonElement
 		(
 			ElementStruct skeleton
 		);
@@ -295,7 +295,7 @@ class EBUCoreFeatures {
 		void generateSkeleton
 		(
 			void
-		);
+		);*/
 		
 		bool hasTypeReference
 		(

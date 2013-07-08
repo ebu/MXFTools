@@ -1388,7 +1388,6 @@ bool EBUCoreFeatures::groupExist
 }
 
 /*
-*/
 void EBUCoreFeatures::generateSkeletonElement
 (
 	EBUCoreFeatures::ElementStruct skeleton
@@ -1415,3 +1414,5 @@ void EBUCoreFeatures::generateSkeleton
 	generateSkeletonElement(ebucoremodel.at(0));
 	out.close();
 }
+
+*/
