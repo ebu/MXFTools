@@ -1476,18 +1476,22 @@ bool metadataEngine::cardinalityAllows
 	Glib::RefPtr<Gtk::ListStore> store
 )
 {
-	int cpt = 0;
-	unsigned int nb = store->children().size();
-	for (unsigned int i = 0; i<nb; i++)
-	{
-		if (store->children()[i][metadataNodeChildrenColumns.metadataNodeChildrenNameCol] == name) {
-			cpt++;
+	if (max >= 0) {
+		int cpt = 0;
+		unsigned int nb = store->children().size();
+		for (unsigned int i = 0; i<nb; i++)
+		{
+			if (store->children()[i][metadataNodeChildrenColumns.metadataNodeChildrenNameCol] == name) {
+				cpt++;
+			}
 		}
-	}
-	if (cpt == 0 or cpt<max) {
-		return true;
+		if (cpt == 0 or cpt<max) {
+			return true;
+		} else {
+			return false;
+		}
 	} else {
-		return false;
+		return true;
 	}
 }
 
@@ -1575,198 +1579,6 @@ void metadataEngine::addNode
 	);
 
 	metadataAssistant->show();
-
-
-
-
-	/*metadataAssistant = new Gtk::Assistant();
-	metadataAssistant->set_modal(true);
-	metadataAssistant->set_title("Add a node");
-
-	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	Gtk::Box * page2 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	Gtk::Box * page3 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-
-////////////// page 1
-	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
-	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));	
-	Gtk::Box * page1hbox3 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,5));	
-
-	Gtk::AspectFrame * page1hbox1space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox2space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox3space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox3space2 = manage(new Gtk::AspectFrame());
-
-
-	Gtk::Label * tagNameTitle = manage(new Gtk::Label("Node name :"));
-	Gtk::Label * tagTypeTitle = manage(new Gtk::Label("Type node :")); 
-
-	tagValueEntry = manage(new Gtk::Entry());
-	tagValueEntry->set_placeholder_text("Input the tag's name'");
-	Gtk::RadioButton::Group radioGroup;
-	Gtk::RadioButton *page1hbox3radiobutton1 = manage(new Gtk::RadioButton(radioGroup, "text", true));
-	Gtk::RadioButton *page1hbox3radiobutton2 = manage(new Gtk::RadioButton(radioGroup, "node", false));
-	addNode_type=false;
-
-	page1hbox3radiobutton1->signal_toggled().connect
-	(
-		sigc::bind<Gtk::Box *, Gtk::Box *>
-		(
-			sigc::mem_fun
-			(
-				*this, 
-				&metadataEngine::on_addNodeText_assistant
-			),
-			page2,
-			page3
-		)
-	);
-	
-	metadataAssistant->signal_apply().connect
-	(
-		sigc::bind<Glib::RefPtr<Gtk::ListStore> >
-		(
-			sigc::mem_fun
-			(
-				*this, 
-				&metadataEngine::on_addNode_assistant_apply
-			),
-			metadataStore
-		)
-	);
-
-	page1hbox1->add(*tagNameTitle);
-	page1hbox1->add(*page1hbox1space1);
-	page1hbox1->add(*tagValueEntry);
-	page1hbox1->show_all_children();
-	page1hbox1->show();
-
-	page1hbox2->add(*page1hbox2space1);
-	page1hbox2->show_all_children();
-	page1hbox2->show();
-	
-	page1hbox3->add(*tagTypeTitle);
-	page1hbox3->add(*page1hbox3space1);
-	page1hbox3->add(*page1hbox3radiobutton1);
-	page1hbox3->add(*page1hbox3space2);
-	page1hbox3->add(*page1hbox3radiobutton2);
-	page1hbox3->show_all_children();
-	page1hbox3->show();
-
-	page1->add(*page1hbox1);
-	page1->add(*page1hbox2);
-	page1->add(*page1hbox3);
-	page1->show_all_children();
-
-// page 2
-	Gtk::Label * nodeTextTitle = manage(new Gtk::Label("Node text :"));
-	nodeTextTitle->set_justify(Gtk::JUSTIFY_LEFT);
-	nodeTextTitle->set_halign(Gtk::ALIGN_START);
-
-	Gtk::Box * assistantTextViewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
-	assistantTextViewBox->set_size_request(120, 150);	
-	assistantTextViewBox->add(*nodeTextTitle);
-
-	Gtk::ScrolledWindow * assistantTextViewScrolledWindow = manage(new Gtk::ScrolledWindow());
-	assistantTextViewScrolledWindow->set_size_request(120, 150);
-
-	Gtk::TextView * assistantTextView = manage (new Gtk::TextView());
-	
-	assistantTextView->drag_highlight();
-	assistantTextView->set_pixels_above_lines(2);
-	assistantTextView->set_left_margin(2);
-	assistantTextView->set_right_margin(2);
-
-	assistantTextView->set_editable(true);
-  assistantTextView->set_cursor_visible(true);
-	assistantTextView->set_wrap_mode(Gtk::WRAP_WORD);
-
-	assistantTextBuffer = Gtk::TextBuffer::create();
-
-	 assistantTextView->set_buffer(assistantTextBuffer);
-	//Add the TreeView, inside a ScrolledWindow, with the button underneath:
-  assistantTextViewScrolledWindow->add(*assistantTextView);
-	assistantTextView->show();
-  //Only show the scrollbars when they are necessary:
-  assistantTextViewScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-
-	assistantTextViewBox->add(*assistantTextViewScrolledWindow);
-	assistantTextViewScrolledWindow->show();
-	page2->add(*assistantTextViewBox);
-
-/////
-// page 3
-/////
-
-	Gtk::Label * nodeChildrenTitle = manage(new Gtk::Label("Node children :"));
-	nodeChildrenTitle->set_justify(Gtk::JUSTIFY_LEFT);
-	nodeChildrenTitle->set_halign(Gtk::ALIGN_START);
-
-	Gtk::Box * assistantNodeChildrenViewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
-	assistantNodeChildrenViewBox->set_size_request(120, 150);	
-	assistantNodeChildrenViewBox->add(*nodeChildrenTitle);
-
-	Gtk::ScrolledWindow * assistantNodeChildrenViewScrolledWindow = manage(new Gtk::ScrolledWindow());
-	assistantNodeChildrenViewScrolledWindow->set_size_request(120, 150);
-
-	Gtk::TextView * assistantNodeChildrenView = manage (new Gtk::TextView());
-	
-	assistantNodeChildrenView->drag_highlight();
-	assistantNodeChildrenView->set_pixels_above_lines(2);
-	assistantNodeChildrenView->set_left_margin(2);
-	assistantNodeChildrenView->set_right_margin(2);
-
-	assistantNodeChildrenView->set_editable(true);
-  assistantNodeChildrenView->set_cursor_visible(true);
-	assistantNodeChildrenView->set_wrap_mode(Gtk::WRAP_WORD);
-
-	assistantNodeChildrenBuffer = Gtk::TextBuffer::create();
-
-	 assistantNodeChildrenView->set_buffer(assistantNodeChildrenBuffer);
-	//Add the TreeView, inside a ScrolledWindow, with the button underneath:
-  assistantNodeChildrenViewScrolledWindow->add(*assistantNodeChildrenView);
-	assistantNodeChildrenView->show();
-  //Only show the scrollbars when they are necessary:
-  assistantNodeChildrenViewScrolledWindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-
-	assistantNodeChildrenViewBox->add(*assistantNodeChildrenViewScrolledWindow);
-	assistantNodeChildrenViewScrolledWindow->show();
-	page3->add(*assistantNodeChildrenViewBox);
-//
-
-	metadataAssistant->insert_page(*page1,0);
-	metadataAssistant->set_page_complete(*page1, true);	
-	metadataAssistant->set_page_type(*page1, Gtk::ASSISTANT_PAGE_INTRO);
-	metadataAssistant->insert_page(*page2,1);
-  metadataAssistant->set_page_complete(*page2, true);
-	metadataAssistant->insert_page(*page3,2);
-  metadataAssistant->set_page_complete(*page3, true);
-	metadataAssistant->set_page_type(*page3, Gtk::ASSISTANT_PAGE_CONFIRM);
-
-	metadataAssistant->signal_cancel().connect
-	(
-		sigc::mem_fun
-		(
-			*this,
-			&metadataEngine::on_assistant_cancel
-		)
-	);
-
-//
-// save the change
-//
-
-	metadataAssistant->signal_close().connect
-	(
-		sigc::mem_fun
-		(
-			*this, &metadataEngine::on_assistant_close
-		)
-	);
-
-	metadataAssistant->show_all_children();
-	metadataAssistant->show();
-	*/
 }
 
 void metadataEngine::removeNode
@@ -1861,6 +1673,7 @@ void metadataEngine::on_addNode_assistant_apply
 	row[metadataNodeChildrenColumns.metadataNodeChildrenNameCol] = addComboBoxText->get_active_text();
 	row[metadataNodeChildrenColumns.metadataNodeChildrenBgColorCol] = "lightgreen";
 	std::string tmp = addComboBoxText->get_active_text();
+	
 	bool istext = false;
 	for (std::list<EBUCoreFeatures::ElementStruct>::iterator it=ebucoreRef.children.begin() ; it != ebucoreRef.children.end(); ++it) 
 	{
@@ -1887,5 +1700,5 @@ void metadataEngine::on_addNode_assistant_apply
 		elReferences.at(previousnodepos)->appendChild(el);
 	}
 	reconstructTreeView();
-	std::cout<< "I pressed apply button" << std::endl;
+	std::cout<< "I pressed apply button"<< std::endl;
 }
