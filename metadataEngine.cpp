@@ -1505,8 +1505,6 @@ void metadataEngine::addNode
 	metadataAssistant->set_title("Add a node");
 
 	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
-
-////////////// page 1
 	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
 	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));
 
@@ -1526,7 +1524,7 @@ void metadataEngine::addNode
 			cpt++;
 		}
 	}
-	if (cpt ==0) {on_assistant_cancel();}
+	
 	page1hbox1->add(*attributeNameTitle);
 	page1hbox1->add(*page1hbox1space1);
 	page1hbox1->add(*addComboBoxText);
@@ -1543,7 +1541,7 @@ void metadataEngine::addNode
 
 
 	metadataAssistant->append_page(*page1);
-	metadataAssistant->set_page_complete(*page1, true);	
+	metadataAssistant->set_page_complete(*page1, ((cpt == 0)?false:true));	
 	metadataAssistant->set_page_type(*page1, Gtk::ASSISTANT_PAGE_CONFIRM);
 
 
@@ -1555,6 +1553,7 @@ void metadataEngine::addNode
 			(
 				*this,
 				&metadataEngine::on_addNode_assistant_apply
+				
 			),
 			metadataStore
 		)
