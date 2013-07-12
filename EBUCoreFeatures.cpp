@@ -34,7 +34,7 @@ EBUCoreFeatures::EBUCoreFeatures
 	}
 	// clean the stack and reuse it for skeleton generation
 	ebucoreStack.clear();
-	generateSkeleton();
+	//generateSkeleton();
 
 }
 

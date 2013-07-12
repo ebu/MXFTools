@@ -57,7 +57,7 @@ metadataWindow::metadataWindow
 		switchEBUCoreEdition//,
 		//style_context
 	);
-	set_has_resize_grip();
+	//set_has_resize_grip();
 	
 }
 

@@ -152,8 +152,6 @@ void metadataEngine::constructTreeViewNew
 	dom_root->setAttribute(xercesc::XMLString::transcode("version"), xercesc::XMLString::transcode("1.4"));
 	xercesc::DOMElement*  elCoreMetadata = doc->createElement(xercesc::XMLString::transcode("coreMetadata"));
 	dom_root->appendChild(elCoreMetadata);
-	xercesc::DOMElement*  elmetadataProvider = doc->createElement(xercesc::XMLString::transcode("metadataProvider"));
-	dom_root->appendChild(elmetadataProvider);
 	xercescdoc = doc;
 	// refresh the viewport and the first expander
 	// to display properly the new bunch of metadata

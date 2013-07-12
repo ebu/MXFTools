@@ -5,6 +5,7 @@
     <property name="can_focus">False</property>
     <property name="no_show_all">True</property>
     <property name="title" translatable="yes">Metadata View</property>
+    <property name="window_position">center</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">mail-attachment</property>
     <property name="gravity">west</property>
