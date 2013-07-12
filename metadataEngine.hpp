@@ -42,6 +42,7 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/cssprovider.h> 
 #include <gtkmm/stylecontext.h>
+#include <gtkmm/paned.h>
 // glib/glibmm
 #include <glibmm/miscutils.h>
 
@@ -78,7 +79,8 @@ class metadataEngine {
 			Gtk::Box * boxStatusRef,
 			Gtk::Expander * expanderRootRef,
 			Gtk::Viewport * viewportTreeRef,
-			Gtk::Switch * SwitchEBUCoreRef
+			Gtk::Switch * SwitchEBUCoreRef,
+			Gtk::Paned * metadataPanedWindowRef
 		);
 		/*!*
 		* @brief Class destructor
@@ -252,6 +254,7 @@ class metadataEngine {
 		Gtk::Box * SecondScrolledWindowBox;
 		Gtk::Box * boxEntries, * boxStatus;
 		Gtk::Switch * EBUCoreSet;
+		Gtk::Paned * panedWindow;
 		// gdk color
 		Gdk::RGBA black;
 		Gdk::RGBA white;

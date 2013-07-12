@@ -105,6 +105,7 @@ protected:
 	Gtk::Box * SecondScrolledWindowBox; /*!< SecondScrolledWindowBox */
 	Gtk::Box * boxEntries;  /*!< boxEntries */
 	Gtk::Box * boxStatus; /*!< boxStatus */
+	Gtk::Paned * metadataPanedWindow; /*!< metadataPanedWindow */
 	
 	// right side widgets
 	Gtk::Label * status;

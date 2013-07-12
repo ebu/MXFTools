@@ -54,7 +54,8 @@ metadataWindow::metadataWindow
 		boxStatus,
 		expanderRoot,
 		viewportTree,
-		switchEBUCoreEdition//,
+		switchEBUCoreEdition,
+		metadataPanedWindow
 		//style_context
 	);
 	//set_has_resize_grip();
@@ -145,6 +146,11 @@ void metadataWindow::refGladeWidgets
 	(
 		"boxStatus",
 		boxStatus
+	);
+	refGlade->get_widget
+	(
+		"metadataPanedWindow",
+		metadataPanedWindow
 	);
 }
 
@@ -918,6 +924,8 @@ void metadataWindow::initMetadataWindow
 	switchEBUCoreEdition->set_active(false);
 	// Initial window state
 	set_visible(false);
+	// set the resize mode of the paned window
+	metadataPanedWindow->set_resize_mode(Gtk::RESIZE_PARENT);
 }
 
 void metadataWindow::initRightSide

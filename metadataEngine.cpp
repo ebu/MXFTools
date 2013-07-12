@@ -28,7 +28,8 @@ metadataEngine::metadataEngine
 	Gtk::Box * boxStatusRef,
 	Gtk::Expander * expanderRootRef,
 	Gtk::Viewport * viewportTreeRef,
-	Gtk::Switch * SwitchEBUCoreRef
+	Gtk::Switch * SwitchEBUCoreRef,
+	Gtk::Paned * metadataPanedWindowRef
 ) 
 {
 	// init the viewport size
@@ -54,6 +55,7 @@ metadataEngine::metadataEngine
 	expanderRoot = expanderRootRef;
 	viewportTree = viewportTreeRef;
 	EBUCoreSet = SwitchEBUCoreRef;
+	panedWindow = metadataPanedWindowRef;
 		// Connect the button clicked signals
 	EBUCoreSet->property_active().signal_changed().connect
 	(

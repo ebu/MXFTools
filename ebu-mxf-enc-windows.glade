@@ -172,7 +172,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkPaned" id="paned1">
+              <object class="GtkPaned" id="metadataPanedWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child>
