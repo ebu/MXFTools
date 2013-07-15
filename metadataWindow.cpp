@@ -55,11 +55,11 @@ metadataWindow::metadataWindow
 		expanderRoot,
 		viewportTree,
 		switchEBUCoreEdition,
-		metadataPanedWindow
+		metadataPanedWindow,
+		dynamic_cast<Gtk::Window*>(this)
 		//style_context
 	);
-	//set_has_resize_grip();
-	
+	set_has_resize_grip();
 }
 
 // class destructor
@@ -959,4 +959,13 @@ void metadataWindow::initRightSide
 	boxStatus->show();
 	FirstScrolledWindowBox->hide();
 	boxEntries->hide();
+}
+
+void metadataWindow::set_window_size
+(
+	int width,
+	int height
+)
+{
+	set_size_request(width,height);
 }

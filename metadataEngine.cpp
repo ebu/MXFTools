@@ -29,7 +29,8 @@ metadataEngine::metadataEngine
 	Gtk::Expander * expanderRootRef,
 	Gtk::Viewport * viewportTreeRef,
 	Gtk::Switch * SwitchEBUCoreRef,
-	Gtk::Paned * metadataPanedWindowRef
+	Gtk::Paned * metadataPanedWindowRef,
+	Gtk::Window * win
 ) 
 {
 	// init the viewport size
@@ -56,6 +57,8 @@ metadataEngine::metadataEngine
 	viewportTree = viewportTreeRef;
 	EBUCoreSet = SwitchEBUCoreRef;
 	panedWindow = metadataPanedWindowRef;
+	window = win;
+	window->set_size_request(350,-1);
 		// Connect the button clicked signals
 	EBUCoreSet->property_active().signal_changed().connect
 	(
@@ -200,6 +203,15 @@ void metadataEngine::constructTreeViewNew
 	viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 	SecondScrolledWindowBox->add(*boxEntries);
 	ebucorename = genericFeatures::removeSuffix(MXFFile, "/");
+	//panedWindow->set_position(viewportTreeMinimumWidth);
+	std::cout<<"Size of viewport"<<viewportTreeMinimumWidth<<std::endl;
+	std::cout<<"Size of the left child"<<panedWindow->get_child1()->get_width()<<std::endl;
+	std::cout<<"Size of the right child"<<panedWindow->get_child2()->get_width()<<std::endl;
+	std::cout<<"Position of the slider"<<panedWindow->get_position()<<std::endl;
+	FirstScrolledWindowBox->set_size_request(panedWindow->get_child1()->get_width(),-1);
+	SecondScrolledWindowBox->set_size_request(panedWindow->get_child2()->get_width(),-1);
+	panedWindow->set_position(viewportTreeMinimumWidth);
+	window->set_size_request(viewportTreeMinimumWidth+700,-1);
 }
 
 void metadataEngine::reconstructTreeView
@@ -314,6 +326,7 @@ void metadataEngine::constructTreeViewFromXML
 	viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 	SecondScrolledWindowBox->add(*boxEntries);
 	ebucorename = genericFeatures::removeSuffix(XMLfile, "/");
+	window->set_size_request(viewportTreeMinimumWidth+700,-1);
 }
 
 void metadataEngine::constructTreeViewFromMXF
@@ -369,6 +382,7 @@ void metadataEngine::constructTreeViewFromMXF
 		viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 		SecondScrolledWindowBox->add(*boxEntries);		
 		ebucorename = genericFeatures::removeSuffix(MXFFile, "/");
+	window->set_size_request(viewportTreeMinimumWidth+700,-1);
 	}
 }
 

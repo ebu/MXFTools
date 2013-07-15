@@ -23,6 +23,7 @@
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 // gtk/gtkmm
+#include <gtkmm/window.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/viewport.h>
@@ -80,7 +81,8 @@ class metadataEngine {
 			Gtk::Expander * expanderRootRef,
 			Gtk::Viewport * viewportTreeRef,
 			Gtk::Switch * SwitchEBUCoreRef,
-			Gtk::Paned * metadataPanedWindowRef
+			Gtk::Paned * metadataPanedWindowRef,
+			Gtk::Window * win
 		);
 		/*!*
 		* @brief Class destructor
@@ -173,7 +175,7 @@ class metadataEngine {
 			void
 		);
 	protected:
-	
+
 		//Node attributes Tree model columns:
 		class NodeAttributesModelColumns : public Gtk::TreeModel::ColumnRecord
 		{
@@ -241,7 +243,7 @@ class metadataEngine {
 		std::vector<std::string> attributeList;
 		std::vector<std::string> nodeList;
 		
-		
+		Gtk::Window * window;
 		//left side widgets
 		Gtk::ScrolledWindow * FirstScrolledWindowBox; /*!< FirstScrolledWindowBox */
 		Gtk::Expander * expanderRoot;

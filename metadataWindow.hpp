@@ -63,6 +63,20 @@ public:
 		void
 	);
 	
+	/**
+	* @fn void set_window_size(int width,int height)
+	* @brief 
+	* @param[in] width : It's mandatory.
+	* @param[in] height : It's mandatory.
+	* @return nothing if all is right or gtkmm-critical error/segmentation fault
+	* @note This function and his documentation must be completed
+	*/
+	void set_window_size
+	(
+		int width,
+		int height
+	);
+	
 protected:
 	
 	// Glade reference
