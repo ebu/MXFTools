@@ -159,7 +159,7 @@ void metadataEngine::constructTreeViewNew
 	// to display properly the new bunch of metadata
 	viewportTree->remove();
 	expanderRoot->remove();
-	previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
+	previousnode = Gtk::manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 	// enable html tag support
 	expanderRoot->set_use_markup(true);
 	// colorize the filename	
@@ -192,7 +192,7 @@ void metadataEngine::constructTreeViewNew
 	elReferences.push_back(dom_root);
 	previouslabel = false;
 	delete boxEntries;
- 	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+ 	boxEntries = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	recursiveConstructTreeView(dom_root, expanderRoot,0);
 	boxEntries->show();
 	// add the expander to the viewport
@@ -214,7 +214,7 @@ void metadataEngine::reconstructTreeView
 	// to display properly the new bunch of metadata
 	viewportTree->remove();
 	expanderRoot->remove();
-	previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
+	previousnode = Gtk::manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 	// enable html tag support
 	expanderRoot->set_use_markup(true);
 	// colorize the filename	
@@ -247,7 +247,7 @@ void metadataEngine::reconstructTreeView
 	elReferences.push_back(dom_root);
 	previouslabel = false;
 	delete boxEntries;
- 	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+ 	boxEntries = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	recursiveConstructTreeView(dom_root, expanderRoot,0);
 	boxEntries->show();
 	// add the expander to the viewport
@@ -273,7 +273,7 @@ void metadataEngine::constructTreeViewFromXML
 	// to display properly the new bunch of metadata
 	viewportTree->remove();
 	expanderRoot->remove();
-	previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
+	previousnode = Gtk::manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 	// enable html tag support
 	expanderRoot->set_use_markup(true);
 	// colorize the filename	
@@ -306,7 +306,7 @@ void metadataEngine::constructTreeViewFromXML
 	elReferences.push_back(dom_root);
 	previouslabel = false;
 	delete boxEntries;
- 	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+ 	boxEntries = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	recursiveConstructTreeView(dom_root, expanderRoot,0);
 	boxEntries->show();
 	// add the expander to the viewport
@@ -331,7 +331,7 @@ void metadataEngine::constructTreeViewFromMXF
 		// to display properly the new bunch of metadata
 		viewportTree->remove(); // clear viewport
 		expanderRoot->remove(); // clear expander content
-		previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
+		previousnode = Gtk::manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 		// enable html tag support
 		expanderRoot->set_use_markup(true);
 		// set font color of the label expander
@@ -361,7 +361,7 @@ void metadataEngine::constructTreeViewFromMXF
 		elSchemaRef.push_back(schemaPath);
 		previouslabel = false;
 		delete boxEntries;
-	 	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+	 	boxEntries = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 		recursiveConstructTreeView(dom_root, expanderRoot,0);
 		boxEntries->show();
 		// add the new expander to the viewport
