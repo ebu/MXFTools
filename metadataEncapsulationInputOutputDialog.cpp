@@ -29,22 +29,22 @@ metadataEncapsulationInputOutputDialog::metadataEncapsulationInputOutputDialog
 	set_position(Gtk::WIN_POS_CENTER);
 	set_decorated(true);
 	// define labels
-	Gtk::Label * partitionLabel = manage(new Gtk::Label("Set the metadata into :"));
-	Gtk::Label * encodingLabel = manage(new Gtk::Label("Encoded as :"));
-	Gtk::Label * inputLabel = manage(new Gtk::Label("In the file :"));
-	Gtk::Label * outputLabel = manage(new Gtk::Label("Select the input XML EBUCore file :"));;
+	Gtk::Label * partitionLabel = Gtk::manage(new Gtk::Label("Set the metadata into :"));
+	Gtk::Label * encodingLabel = Gtk::manage(new Gtk::Label("Encoded as :"));
+	Gtk::Label * inputLabel = Gtk::manage(new Gtk::Label("In the file :"));
+	Gtk::Label * outputLabel = Gtk::manage(new Gtk::Label("Select the input XML EBUCore file :"));;
 	// define box
-	Gtk::Box * pathInputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
-	Gtk::Box * pathOutputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathInputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathOutputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
 	// define buttons
-	pathInputButton = manage(new Gtk::Button("Select"));
-	pathOutputButton = manage(new Gtk::Button("Select"));
+	pathInputButton = Gtk::manage(new Gtk::Button("Select"));
+	pathOutputButton = Gtk::manage(new Gtk::Button("Select"));
 	// define entry
 	// define entry
-	pathInputEntry = manage(new Gtk::Entry());
+	pathInputEntry = Gtk::manage(new Gtk::Entry());
 	pathInputEntry->set_editable(true);
 	pathInputEntry->set_placeholder_text("Select the input XML file...");
-	pathOutputEntry = manage(new Gtk::Entry());
+	pathOutputEntry = Gtk::manage(new Gtk::Entry());
 	pathOutputEntry->set_editable(true);
 	pathOutputEntry->set_placeholder_text("Select the destination MXF file...");
 	// pack the entry and its button
@@ -53,16 +53,16 @@ metadataEncapsulationInputOutputDialog::metadataEncapsulationInputOutputDialog
 	pathOutputBox->pack_start(*pathOutputEntry);
 	pathOutputBox->pack_start(*pathOutputButton);
 	// define buttonbox
-	Gtk::ButtonBox * partitionButtonBox = manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
-	Gtk::ButtonBox * encodingButtonBox = manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
+	Gtk::ButtonBox * partitionButtonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
+	Gtk::ButtonBox * encodingButtonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
 	// define radio buttons
 	Gtk::RadioButton::Group partitionGroup;
-    partitionHeader = manage(new Gtk::RadioButton(partitionGroup,"header partition"));
-    partitionFooter = manage(new Gtk::RadioButton(partitionGroup,"footer partition"));
+    partitionHeader = Gtk::manage(new Gtk::RadioButton(partitionGroup,"header partition"));
+    partitionFooter = Gtk::manage(new Gtk::RadioButton(partitionGroup,"footer partition"));
 	Gtk::RadioButton::Group encodingGroup;
-    encodingKLV = manage(new Gtk::RadioButton(encodingGroup,"KLV"));
-    encodingDark = manage(new Gtk::RadioButton(encodingGroup,"XML"));
-    encodingSide = manage(new Gtk::RadioButton(encodingGroup,"External link"));
+    encodingKLV = Gtk::manage(new Gtk::RadioButton(encodingGroup,"KLV"));
+    encodingDark = Gtk::manage(new Gtk::RadioButton(encodingGroup,"XML"));
+    encodingSide = Gtk::manage(new Gtk::RadioButton(encodingGroup,"External link"));
     // add radio buttons into their own radio box
     partitionButtonBox->pack_start(*partitionHeader);
     partitionButtonBox->pack_start(*partitionFooter);
