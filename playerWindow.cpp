@@ -1224,7 +1224,7 @@ bool playerWindow::on_mousemove
 	GdkEventMotion* /*event*/
 ) 
 {
-	if (!timeline_box->get_visible() and !player_control_box->get_visible()) {
+	if (!timeline_box->get_visible() && !player_control_box->get_visible()) {
 		timeline_box->set_visible(true);
 		player_control_box->set_visible(true);
 		status_box->set_visible(true);
