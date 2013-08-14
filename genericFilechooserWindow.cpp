@@ -48,7 +48,7 @@ genericFilechooserWindow::genericFilechooserWindow
 	response = run();
 	// alert dialog
 	if (action != Gtk::FILE_CHOOSER_ACTION_SAVE) {
-		if (response == Gtk::RESPONSE_OK and 
+		if (response == Gtk::RESPONSE_OK && 
 		!genericFeatures::fileExists(get_filename()))
 		{
 			genericAlertWindow * AC = new genericAlertWindow
