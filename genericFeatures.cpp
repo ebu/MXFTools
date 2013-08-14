@@ -90,9 +90,11 @@ bool genericFeatures::fileExists
 {
 	std::ifstream f(filename.c_str());
 	if (f.good()) {
-		f.close(); return true;
+		f.close(); 
+		return true;
 	}
-	f.close(); return false;
+	f.close(); 
+	return false;
 }
 
 unsigned long int genericFeatures::getFileSize
