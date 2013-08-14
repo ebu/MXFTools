@@ -43,26 +43,70 @@ ebucoreParser::~ebucoreParser(void)
 	ebucoremodel.clear();
 }
 
-// get the path to the schemas
-int ebucoreParser::getSchemas (std::string dir, std::vector<std::string> &files) {
-	DIR *dp;
-	struct dirent *dirp;
-	// if opening folder fail then
-	if((dp = opendir(dir.c_str())) == NULL) {
-		// display error message
-		std::cout << "Error(" << errno << ") opening " << dir << std::endl;
-		return errno;
+#ifdef _WIN32
+	std::string ebucoreParser::wchar_t2string(const wchar_t *wchar)
+	{
+		 std::string str = "";
+		 int index = 0;
+		 while(wchar[index] != 0)
+		 {
+		     str += (char)wchar[index];
+		     ++index;
+		 }
+		 return str;
 	}
-	// while not the end of folder
-	while ((dirp = readdir(dp)) != NULL) {
-		// if it is am xsd file then
-		if (dirp->d_type == DT_REG and isExtension(dirp->d_name, "xsd"))
-			// save the schema filename inside the vector
-			files.push_back(std::string(dirp->d_name));
+
+	wchar_t *ebucoreParser::string2wchar_t(const std::string &str)
+	{
+		 wchar_t wchar[260];
+		 unsigned int index = 0;
+		 while(index < str.size())
+		 {
+		     wchar[index] = (wchar_t)str[index];
+		     ++index;
+		 }
+		 wchar[index] = 0;
+		 return wchar;
 	}
-	closedir(dp); // close folder
-	return 0;
-}
+
+	int ebucoreParser::getSchemas(std::string dir, std::vector<std::string> &files)
+	{
+		 WIN32_FIND_DATA FindFileData;
+		 wchar_t * FileName = string2wchar_t(dir);
+		 HANDLE hFind = FindFirstFile(FileName, &FindFileData);
+		if (isExtension(wchar_t2string(FindFileData.cFileName), "xsd")) {
+			files.push_back(wchar_t2string(FindFileData.cFileName));
+		}
+		 while (FindNextFile(hFind, &FindFileData)) {
+			std::string path(wchar_t2string(FindFileData.cFileName));
+			if (isExtension(path, "xsd")) {
+				files.push_back(path);
+			}
+		}
+		 return 0;
+	}
+#else
+	// get the path to the schemas
+	int ebucoreParser::getSchemas (std::string dir, std::vector<std::string> &files) {
+		DIR *dp;
+		struct dirent *dirp;
+		// if opening folder fail then
+		if((dp = opendir(dir.c_str())) == NULL) {
+			// display error message
+			std::cout << "Error(" << errno << ") opening " << dir << std::endl;
+			return errno;
+		}
+		// while not the end of folder
+		while ((dirp = readdir(dp)) != NULL) {
+			// if it is am xsd file then
+			if (dirp->d_type == DT_REG and isExtension(dirp->d_name, "xsd"))
+				// save the schema filename inside the vector
+				files.push_back(std::string(dirp->d_name));
+		}
+		closedir(dp); // close folder
+		return 0;
+	}
+#endif
 
 // extract a schema
 void ebucoreParser::extractSchema(std::string pathtofile) {
