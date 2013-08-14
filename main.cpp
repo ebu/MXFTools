@@ -18,7 +18,26 @@ This is the documentation of the EBU Player
  *
  */
 
-#include "playerWindow.hpp"
+#ifdef __unix__
+	#include "playerWindow.hpp"
+#endif
+
+#ifdef _WIN32
+	#include "stdafx.h"
+	#include <windows.h>
+	
+	int main (int argc, char **argv);
+	int WINAPI WinMain
+	(
+		HINSTANCE hInstance,
+		HINSTANCE hPrevInstance,
+		LPSTR lpCmdLine,
+		int nCmdShow
+	)
+	{
+		return main (__argc, __argv);
+	}
+#endif
 	/**
 	 * @fn int main (int argc, char *argv[])
    * @brief This function loads the player design (all windows design).
