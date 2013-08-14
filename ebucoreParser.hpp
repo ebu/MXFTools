@@ -14,8 +14,13 @@
  *
  */
 
-#include <sys/types.h>
-#include <dirent.h>
+#ifdef _WIN32
+	#include <windows.h>
+	#include "genericFeatures.hpp"
+#else
+	#include <sys/types.h>
+	#include <dirent.h>
+#endif
 #include <errno.h>
 #include <vector>
 #include <string>
@@ -58,10 +63,6 @@ protected:
 	std::vector<ElementStruct> ebucoremodel; // ebucore model 
 	std::vector<std::string> ebucoreStack;  //ebucore stack 
 
-	#ifdef _WIN32
-		std::string wchar_t2string(const wchar_t *wchar);
-		wchar_t *string2wchar_t(const std::string &str);
-	#endif
 	int getSchemas (std::string dir, std::vector<std::string> &files);
 	bool isExtension(std::string str, std::string extension);
 	bool isDCSimpleType(std::string str);

@@ -129,27 +129,78 @@ std::string genericFeatures::getSizeUnit
 	return converted.str()+" "+Units[divider];
 }
 
-std::vector<std::string> genericFeatures::listFiles
-(
-	std::string path
-)
-{
-	std::vector<std::string> PathToFiles;
-	struct dirent *entry;
-	DIR *dp;
-//	unsigned char isFile =0x8;
-	unsigned char isFolder =0x4;
-
-	dp = opendir(path.c_str());
-	if (dp == NULL) { return PathToFiles; }
-
-	while ((entry = readdir(dp))) 
-	{ 
-		if (entry->d_type != isFolder) 
+#ifdef _WIN32
+	std::string genericFeatures::wchar_t2string
+	(
+		const wchar_t *wchar
+	)
+	{
+		std::string str = "";
+		int index = 0;
+		while(wchar[index] != 0)
 		{
-			PathToFiles.push_back(path+"/"+entry->d_name);
+			str += (char)wchar[index];
+			++index;
 		}
+		return str;
 	}
-	closedir(dp);
-	return PathToFiles;
-}
+
+	wchar_t *genericFeatures::string2wchar_t
+	(
+		const std::string &str
+	)
+	{
+		 wchar_t wchar[260];
+		 unsigned int index = 0;
+		 while(index < str.size())
+		 {
+		     wchar[index] = (wchar_t)str[index];
+		     ++index;
+		 }
+		 wchar[index] = 0;
+		 return wchar;
+	}
+	
+	std::vector<std::string> genericFeatures::listFiles
+	(
+		std::string dir
+	)
+	{
+		WIN32_FIND_DATA FindFileData;
+		wchar_t * FileName = string2wchar_t(dir);
+		HANDLE hFind = FindFirstFile(FileName, &FindFileData);
+
+		std::vector<std::string> listFileNames;
+		listFileNames.push_back(wchar_t2string(FindFileData.cFileName));
+
+		while (FindNextFile(hFind, &FindFileData)) {
+			listFileNames.push_back(wchar_t2string(FindFileData.cFileName));
+		}
+		return listFileNames;
+	}
+#else
+	std::vector<std::string> genericFeatures::listFiles
+	(
+		std::string dir
+	)
+	{
+		std::vector<std::string> PathToFiles;
+		struct dirent *entry;
+		DIR *dp;
+	//	unsigned char isFile =0x8;
+		unsigned char isFolder =0x4;
+
+		dp = opendir(dir.c_str());
+		if (dp == NULL) { return PathToFiles; }
+
+		while ((entry = readdir(dp))) 
+		{ 
+			if (entry->d_type != isFolder) 
+			{
+				PathToFiles.push_back(dir+"/"+entry->d_name);
+			}
+		}
+		closedir(dp);
+		return PathToFiles;
+	}
+#endif

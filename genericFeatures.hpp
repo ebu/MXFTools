@@ -16,7 +16,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <string.h>
 #include <iterator>
 #include <sstream>
 #include <fstream>
@@ -24,10 +23,11 @@
 #include <ctime>
 #include <cmath>
 #include <chrono>
-#include <dirent.h>
- 
-#ifndef WIN32
-    #include <sys/types.h>
+#ifdef _WIN32
+	#include <windows.h>
+#else
+	#include <dirent.h>
+	#include <sys/types.h>
 #endif
 
 /*! \class genericFeatures
@@ -175,17 +175,28 @@ public:
 		unsigned long int bytes
 	);
 
+	#ifdef _WIN32
+		static std::string wchar_t2string
+		(
+			const wchar_t *wchar
+		);
+		
+		static wchar_t *string2wchar_t
+		(
+			const std::string &str
+		)
+	#endif
 	/**
-	 * @fn static std::vector<std::string> listFiles(std::string path)
+	 * @fn static std::vector<std::string> listFiles(std::string dir)
 	 * @brief This function will generate a vector with the path to each files into the folder as a standard string.
 	 * @brief
 	 * @note needs more documentation
-	 * @param[in] std::string path : Path to the folder
+	 * @param[in] std::string dir : Path to the folder
 	 * @return unsigned long int if all is right or an error at compilation time.
 	 */
 	static std::vector<std::string> listFiles
 	(
-		std::string path
+		std::string dir
 	);
 	
 protected:

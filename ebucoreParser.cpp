@@ -44,41 +44,16 @@ ebucoreParser::~ebucoreParser(void)
 }
 
 #ifdef _WIN32
-	std::string ebucoreParser::wchar_t2string(const wchar_t *wchar)
-	{
-		 std::string str = "";
-		 int index = 0;
-		 while(wchar[index] != 0)
-		 {
-		     str += (char)wchar[index];
-		     ++index;
-		 }
-		 return str;
-	}
-
-	wchar_t *ebucoreParser::string2wchar_t(const std::string &str)
-	{
-		 wchar_t wchar[260];
-		 unsigned int index = 0;
-		 while(index < str.size())
-		 {
-		     wchar[index] = (wchar_t)str[index];
-		     ++index;
-		 }
-		 wchar[index] = 0;
-		 return wchar;
-	}
-
 	int ebucoreParser::getSchemas(std::string dir, std::vector<std::string> &files)
 	{
 		 WIN32_FIND_DATA FindFileData;
-		 wchar_t * FileName = string2wchar_t(dir);
+		 wchar_t * FileName = genericFeatures::string2wchar_t(dir);
 		 HANDLE hFind = FindFirstFile(FileName, &FindFileData);
-		if (isExtension(wchar_t2string(FindFileData.cFileName), "xsd")) {
-			files.push_back(wchar_t2string(FindFileData.cFileName));
+		if (isExtension(genericFeatures::wchar_t2string(FindFileData.cFileName), "xsd")) {
+			files.push_back(genericFeatures::wchar_t2string(FindFileData.cFileName));
 		}
 		 while (FindNextFile(hFind, &FindFileData)) {
-			std::string path(wchar_t2string(FindFileData.cFileName));
+			std::string path(genericFeatures::wchar_t2string(FindFileData.cFileName));
 			if (isExtension(path, "xsd")) {
 				files.push_back(path);
 			}
