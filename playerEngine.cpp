@@ -535,7 +535,11 @@ bool playerEngine::on_rewind_timeout
 )
 {
 	gint64 pos = 0;
-	Gst::Format fmt = Gst::FORMAT_TIME;
+	#ifdef _WIN32
+		GstFormat fmt = GstFormat::GST_FORMAT_TIME;
+	#else
+		Gst::Format fmt = Gst::FORMAT_TIME;
+	#endif
 
 	if(playout->query_position(fmt, pos))
 	{
@@ -546,7 +550,7 @@ bool playerEngine::on_rewind_timeout
 			(
 				playout->seek
 				(
-					fmt, 
+					(Gst::Format)fmt, 
 					Gst::SEEK_FLAG_FLUSH,
 					newPos 
 				)
@@ -637,7 +641,11 @@ bool playerEngine::on_timeout
 	void
 )
 {
-	Gst::Format fmt = Gst::FORMAT_TIME;
+	#ifdef _WIN32
+		GstFormat fmt = GstFormat::GST_FORMAT_TIME;
+	#else
+		Gst::Format fmt = Gst::FORMAT_TIME;
+	#endif
 	gint64 pos = 0;
 
 	if (
