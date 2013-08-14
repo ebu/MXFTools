@@ -90,7 +90,7 @@ void metadataEngine::setRightSide
 	bool createNew
 )
 {
-	if (genericFeatures::getFileSize(filename) > 0 and !createNew) 
+	if (genericFeatures::getFileSize(filename) > 0 && !createNew) 
  	{
  		status->set_text("EBUCore metadata detected");
  	 	sourceLabel->set_text(genericFeatures::removeSuffix(filename, "/"));
@@ -102,7 +102,7 @@ void metadataEngine::setRightSide
  	 			)
  	 		);
  		FirstScrolledWindowBox->show();
-	} else if (genericFeatures::getFileSize(filename) == 0 and createNew) {
+	} else if (genericFeatures::getFileSize(filename) == 0 && createNew) {
  		status->set_text("Creating a new EBUCore instance");
  	 	sourceLabel->set_text(genericFeatures::removeSuffix(filename, "/"));
  	 	sizeValue->set_text
@@ -120,7 +120,7 @@ void metadataEngine::setRightSide
 		FirstScrolledWindowBox->hide();
 	}
 	// make the switch sensitive or not
-	EBUCoreSet->set_sensitive((genericFeatures::getFileSize(filename) > 0 or createNew));
+	EBUCoreSet->set_sensitive((genericFeatures::getFileSize(filename) > 0 || createNew));
 }
 
 unsigned int metadataEngine::getViewportSize
