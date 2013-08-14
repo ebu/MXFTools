@@ -72,7 +72,7 @@ Gtk::Label * customEntry::get_sample
 	void
 )
 {
-	return manage(new Gtk::Label(sample));
+	return Gtk::manage(new Gtk::Label(sample));
 }
 
 Gtk::Label * customEntry::get_description
@@ -80,7 +80,7 @@ Gtk::Label * customEntry::get_description
 	void
 )
 {
-	return manage(new Gtk::Label(description));
+	return Gtk::manage(new Gtk::Label(description));
 }
 
 void customEntry::set_value
