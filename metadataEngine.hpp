@@ -223,6 +223,7 @@ class metadataEngine {
 		std::vector<xercesc::DOMElement *> elReferences;
 		std::vector<std::string> elSchemaRef;
 		std::string schemaPath;
+		std::string reloadSchemaPath;
 		
 		Gtk::Assistant * metadataAssistant;
 		Glib::RefPtr<Gtk::TextBuffer> metadataTextBuffer;

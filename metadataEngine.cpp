@@ -203,15 +203,12 @@ void metadataEngine::constructTreeViewNew
 	viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 	SecondScrolledWindowBox->add(*boxEntries);
 	ebucorename = genericFeatures::removeSuffix(MXFFile, "/");
-	//panedWindow->set_position(viewportTreeMinimumWidth);
-	std::cout<<"Size of viewport"<<viewportTreeMinimumWidth<<std::endl;
-	std::cout<<"Size of the left child"<<panedWindow->get_child1()->get_width()<<std::endl;
-	std::cout<<"Size of the right child"<<panedWindow->get_child2()->get_width()<<std::endl;
-	std::cout<<"Position of the slider"<<panedWindow->get_position()<<std::endl;
 	FirstScrolledWindowBox->set_size_request(panedWindow->get_child1()->get_width(),-1);
 	SecondScrolledWindowBox->set_size_request(panedWindow->get_child2()->get_width(),-1);
-	panedWindow->set_position(viewportTreeMinimumWidth);
+	panedWindow->set_position(viewportTreeMinimumWidth+50);
 	window->set_size_request(viewportTreeMinimumWidth+700,-1);
+	panedWindow->check_resize();
+	panedWindow->resize_children();
 }
 
 void metadataEngine::reconstructTreeView
@@ -226,7 +223,6 @@ void metadataEngine::reconstructTreeView
 	// to display properly the new bunch of metadata
 	viewportTree->remove();
 	expanderRoot->remove();
-	previousnode = manage(new Gtk::Expander("!###ImAnEmptyExpander###!"));
 	// enable html tag support
 	expanderRoot->set_use_markup(true);
 	// colorize the filename	
@@ -235,7 +231,6 @@ void metadataEngine::reconstructTreeView
 	expanderRoot->override_color(blue, Gtk::STATE_FLAG_NORMAL);
 	expanderRoot->set_label(ebucorename);
 	expanderRoot->set_name("0");
-	expanderRoot->set_expanded(false);
 	expanderRoot->property_expanded().signal_changed().connect
 	(
 		sigc::bind<Gtk::Expander *>
@@ -260,7 +255,7 @@ void metadataEngine::reconstructTreeView
 	previouslabel = false;
 	delete boxEntries;
  	boxEntries = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
-	recursiveConstructTreeView(dom_root, expanderRoot,0);
+	recursiveConstructTreeView(dom_root, expanderRoot,previousnodepos);
 	boxEntries->show();
 	// add the expander to the viewport
 	viewportTree->add(*expanderRoot);
@@ -339,7 +334,6 @@ void metadataEngine::constructTreeViewFromMXF
 		xercesc::XMLPlatformUtils::Initialize();
 		xercescdoc = SDKWrapper->getEBUCore();
 		xercesc::DOMElement*  dom_root = ((SDKWrapper->getEBUCore())->getDocumentElement());
-		//xercesc::XMLPlatformUtils::Terminate();
 		// refresh the viewport and the first expander
 		// to display properly the new bunch of metadata
 		viewportTree->remove(); // clear viewport
@@ -382,7 +376,7 @@ void metadataEngine::constructTreeViewFromMXF
 		viewportTree->set_size_request(viewportTreeMinimumWidth,-1);
 		SecondScrolledWindowBox->add(*boxEntries);		
 		ebucorename = genericFeatures::removeSuffix(MXFFile, "/");
-	window->set_size_request(viewportTreeMinimumWidth+700,-1);
+		window->set_size_request(viewportTreeMinimumWidth+700,-1);
 	}
 }
 
@@ -533,6 +527,14 @@ void metadataEngine::recursiveConstructTreeView
 			// set a name/id to the node
 //			node->set_name(std::to_string(cptnode++));
 			node->set_name(std::to_string(elReferences.size()));
+			
+			if (depth >= 0 and (int)elReferences.size() <= depth) 
+			{
+				std::cout<< reloadSchemaPath << std::endl;
+				node->set_expanded(true);
+			} else {
+				node->set_expanded(false);
+			}
 			// store the DOM element adress
 			elReferences.push_back(el);
 			// configure the new expander
@@ -540,7 +542,7 @@ void metadataEngine::recursiveConstructTreeView
 			// end encapsultation level
 			finishEncapsulation(root,node);
 			// visit the first children of the current node
-			recursiveConstructTreeView(el->getFirstElementChild(), node ,depth+1);
+			recursiveConstructTreeView(el->getFirstElementChild(), node ,depth);
 		} else {
 			Gtk::EventBox *eventLabel = manage(new Gtk::EventBox);
 			eventLabel->set_name(std::to_string(elReferences.size()));
@@ -1712,6 +1714,11 @@ void metadataEngine::on_addNode_assistant_apply
 		xercesc::DOMElement*  el = xercescdoc->createElement(xercesc::XMLString::transcode(tmp.c_str()));		
 		elReferences.at(previousnodepos)->appendChild(el);
 	}
-	reconstructTreeView();
+	
+	previousnode->show_all_children();
+	
+	reloadSchemaPath = elSchemaRef.at(previousnodepos);
+	//reconstructTreeView();
+	//std::cout<<"previous node position [on_addNode_apply] :"<< previousnodepos <<std::endl;
 	std::cout<< "I pressed apply button"<< std::endl;
 }

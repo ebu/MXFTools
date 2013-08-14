@@ -1,4 +1,4 @@
 export PKG_CONFIG_PATH=/usr/lib64/pkgconfig/:/usr/share/pkgconfig/:/usr/local/lib/pkgconfig/
-LD_LIBRARY_PATH=/usr/local/lib/
+export LD_LIBRARY_PATH=/usr/local/lib/
 
 c++ -std=c++11 *.cpp -o demo-linux64 `pkg-config --libs --cflags gtkmm-3.0 gdkmm-3.0 xerces-c libMXF-1.0 libMXF++-1.0 bmx-0.1 ebu-mxfsdk-1.0` -W -Wall

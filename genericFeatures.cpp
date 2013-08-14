@@ -88,13 +88,11 @@ bool genericFeatures::fileExists
 	std::string filename
 )
 {
-	FILE * pFile = fopen (filename.c_str(),"rb");
-	if (pFile!=NULL)
-	{
-		fclose (pFile);
-		return true;
+	std::ifstream f(filename.c_str());
+	if (f.good()) {
+		f.close(); return true;
 	}
-	return false;
+	f.close(); return false;
 }
 
 unsigned long int genericFeatures::getFileSize
