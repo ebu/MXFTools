@@ -38,21 +38,21 @@ metadataEncapsulationDialog::metadataEncapsulationDialog
 	set_position(Gtk::WIN_POS_CENTER);
 	set_decorated(true);
 	// define labels
-	Gtk::Label * partitionLabel = manage(new Gtk::Label("Set the metadata into :"));
-	Gtk::Label * encodingLabel = manage(new Gtk::Label("Encoded as :"));
-	Gtk::Label * inputPathLabel = manage(new Gtk::Label(inputLabel));
-	Gtk::Label * outputPathLabel = manage(new Gtk::Label(outputLabel));
+	Gtk::Label * partitionLabel = Gtk::manage(new Gtk::Label("Set the metadata into :"));
+	Gtk::Label * encodingLabel = Gtk::manage(new Gtk::Label("Encoded as :"));
+	Gtk::Label * inputPathLabel = Gtk::manage(new Gtk::Label(inputLabel));
+	Gtk::Label * outputPathLabel = Gtk::manage(new Gtk::Label(outputLabel));
 	// define box
-	Gtk::Box * pathInputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
-	Gtk::Box * pathOutputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathInputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathOutputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
 	// define buttons
-	pathInputButton = manage(new Gtk::Button(inputButtonLabel));
-	pathOutputButton = manage(new Gtk::Button(outputButtonLabel));
+	pathInputButton = Gtk::manage(new Gtk::Button(inputButtonLabel));
+	pathOutputButton = Gtk::manage(new Gtk::Button(outputButtonLabel));
 		// define entry
-	pathInputEntry = manage(new Gtk::Entry());
+	pathInputEntry = Gtk::manage(new Gtk::Entry());
 	pathInputEntry->set_editable(true);
 	pathInputEntry->set_placeholder_text(inputPlaceHolderLabel);
-	pathOutputEntry = manage(new Gtk::Entry());
+	pathOutputEntry = Gtk::manage(new Gtk::Entry());
 	pathOutputEntry->set_editable(true);
 	pathOutputEntry->set_placeholder_text(outputPlaceHolderLabel);
 	// pack the entry and its button
@@ -65,12 +65,12 @@ metadataEncapsulationDialog::metadataEncapsulationDialog
 	Gtk::ButtonBox * encodingButtonBox = manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
 	// define radio buttons
 	Gtk::RadioButton::Group partitionGroup;
-    partitionHeader = manage(new Gtk::RadioButton(partitionGroup,"header partition"));
-    partitionFooter = manage(new Gtk::RadioButton(partitionGroup,"footer partition"));
+    partitionHeader = Gtk::manage(new Gtk::RadioButton(partitionGroup,"header partition"));
+    partitionFooter = Gtk::manage(new Gtk::RadioButton(partitionGroup,"footer partition"));
 	Gtk::RadioButton::Group encodingGroup;
-    encodingKLV = manage(new Gtk::RadioButton(encodingGroup,"KLV"));
-    encodingDark = manage(new Gtk::RadioButton(encodingGroup,"XML"));
-    encodingSide = manage(new Gtk::RadioButton(encodingGroup,"External link"));
+    encodingKLV = Gtk::manage(new Gtk::RadioButton(encodingGroup,"KLV"));
+    encodingDark = Gtk::manage(new Gtk::RadioButton(encodingGroup,"XML"));
+    encodingSide = Gtk::manage(new Gtk::RadioButton(encodingGroup,"External link"));
     // add radio buttons into their own radio box
     partitionButtonBox->pack_start(*partitionHeader);
     partitionButtonBox->pack_start(*partitionFooter);
