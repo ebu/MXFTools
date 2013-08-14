@@ -35,19 +35,19 @@ genericFilechooserInputOutput::genericFilechooserInputOutput
 	set_position(Gtk::WIN_POS_CENTER);
 	set_decorated(true);
 	// define labels
-	Gtk::Label * inputPathLabel = manage(new Gtk::Label(inputLabel));
-	Gtk::Label * outputPathLabel = manage(new Gtk::Label(outputLabel));
+	Gtk::Label * inputPathLabel = Gtk::manage(new Gtk::Label(inputLabel));
+	Gtk::Label * outputPathLabel = Gtk::manage(new Gtk::Label(outputLabel));
 	// define box
-	Gtk::Box * pathInputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
-	Gtk::Box * pathOutputBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathInputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
+	Gtk::Box * pathOutputBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
 	// define buttons
-	pathInputButton = manage(new Gtk::Button(inputButtonLabel));
-	pathOutputButton = manage(new Gtk::Button(outputButtonLabel));
+	pathInputButton = Gtk::manage(new Gtk::Button(inputButtonLabel));
+	pathOutputButton = Gtk::manage(new Gtk::Button(outputButtonLabel));
 	// define entry
-	pathInputEntry = manage(new Gtk::Entry());
+	pathInputEntry = Gtk::manage(new Gtk::Entry());
 	pathInputEntry->set_editable(true);
 	pathInputEntry->set_placeholder_text(inputPlaceHolderLabel);
-	pathOutputEntry = manage(new Gtk::Entry());
+	pathOutputEntry = Gtk::manage(new Gtk::Entry());
 	pathOutputEntry->set_editable(true);
 	pathOutputEntry->set_placeholder_text(outputPlaceHolderLabel);
 	// pack the entry and its button
