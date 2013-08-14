@@ -242,7 +242,7 @@ std::list<ebucoreParser::AttributeStruct> ebucoreParser::generateAttributes(std:
 		tmpEl=(dynamic_cast<xercesc::DOMElement*>(tmpEl->getParentNode()))->getFirstElementChild();
 		
 		// looking for a complexType or an attributeGroup with the right name 
-		while (((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i) ) or ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "attributeGroup" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i)) ) {
+		while (((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i) ) || ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "attributeGroup" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i)) ) {
 			tmpEl = tmpEl->getNextElementSibling();
 		}
 		
@@ -272,13 +272,13 @@ std::list<ebucoreParser::ElementStruct> ebucoreParser::generateChildren(std::str
 	// copy the current position of xercesc pointer
 	xercesc::DOMElement * tmpEl = el;
 	// while xercesc pointer not null, element different of complexType with the proper name
-	while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
 		tmpEl = tmpEl->getNextElementSibling();// next
 	}
 	// grab the first child of proper element
 	tmpEl=tmpEl->getFirstElementChild();
 	// looking for the sequence of elements
-	while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
+	while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
 		tmpEl = tmpEl->getNextElementSibling(); // next
 	}
 	// if pointer not null, grab the first child of the current element
@@ -319,7 +319,7 @@ std::list<ebucoreParser::ElementStruct> ebucoreParser::generateChildren(std::str
 				}
 			}
 			// if element type is ebucore and the type not present in the stack, then
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
 				internalChildren.children = generateChildren(removePrefix(internalChildren.type,":"), el, level+1);					
@@ -344,13 +344,13 @@ void ebucoreParser::generateGroupChildren(std::list<ElementStruct> children, std
 	// store the current position of xercesc pointer	
 	xercesc::DOMElement * tmpEl = el;
 	// looking for the group who contains the other elements with the father name
-	while (tmpEl != 0  and not ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "group" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) == removePrefix(father,":") )) {
+	while (tmpEl != 0  && !((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "group" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) == removePrefix(father,":") )) {
 		tmpEl = tmpEl->getNextElementSibling();
 	}
 	// enter inside the group
 	tmpEl=tmpEl->getFirstElementChild();
 	// looking for the sequence
-	while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
+	while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
 		tmpEl = tmpEl->getNextElementSibling();
 	}
 	// if pointer not null, grab the first child
@@ -391,7 +391,7 @@ void ebucoreParser::generateGroupChildren(std::list<ElementStruct> children, std
 			}
 			
 			// if it is an ebucore element and the type of this element is not present in the element type stack
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				// push the type
 				ebucoreStack.push_back(internalChildren.type);
 				// generate children
