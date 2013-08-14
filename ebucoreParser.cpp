@@ -294,15 +294,15 @@ std::list<ebucoreParser::ElementStruct> ebucoreParser::generateChildren(std::str
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the children struct
 			ebucoreParser::ElementStruct internalChildren;
 			// grab the right name/references
 			internalChildren.name = (name.size()>0)?name:ref;
 			// identify the cardinality and the type of element
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			// if type is not standard
 			if (!isStandardType(type)) {
@@ -365,15 +365,15 @@ void ebucoreParser::generateGroupChildren(std::list<ElementStruct> children, std
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the list of children
 			ebucoreParser::ElementStruct internalChildren;
 			// identify the element name
 			internalChildren.name = (name.size()>0)?name:ref;
 			// identify the cardinality and type
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			// if it is not a standard type
 			if (!isStandardType(type)) {
@@ -437,14 +437,14 @@ ebucoreParser::ElementStruct ebucoreParser::constructSchema(xercesc::DOMElement 
 	std::string str (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("name"))));
 	std::string type (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("type"))));
 	std::string ref (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("ref"))));
-	std::string min (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-	std::string max (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+	std::string minimum (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+	std::string maximum (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 	// instantiate a new root
 	ebucoreParser::ElementStruct root;
 	// grab the name, the cardinalities, the type, attributes and children
 	root.name = (str.size()>0)?str:ref;
-	root.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-	root.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+	root.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+	root.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 	root.type = ((type.size()>0)?type:"undefined");
 	// store the current element type inside the stack to avoid infinite loops
 	ebucoreStack.push_back(root.type);
