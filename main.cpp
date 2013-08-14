@@ -6,7 +6,7 @@
  * \authors Marco Dos Santos Oliveira
  * \version 0.1
  * \date 20 august 2012
- * \copyright GNU GPLv3
+ * \copyright This software is published in MPLv2.0
  *
  */
 
