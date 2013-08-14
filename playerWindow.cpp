@@ -1211,7 +1211,7 @@ bool playerWindow::on_timeout_fullscreen
 	void
 )
 {
-  if (timeline_box->get_visible() and player_control_box->get_visible() and nextmotiondetection <= time(NULL)) {
+  if (timeline_box->get_visible() && player_control_box->get_visible() && nextmotiondetection <= time(NULL)) {
 		timeline_box->set_visible(false);
 		player_control_box->set_visible(false);
 		status_box->set_visible(false);
