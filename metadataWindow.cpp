@@ -927,13 +927,13 @@ void metadataWindow::initRightSide
 {
 	//boxStatus = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
  	//boxStatus->show();
-	status = manage(new Gtk::Label("No EBUCore metadata detected"));
- 	lineOne = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,0));
- 	source = manage(new Gtk::Label("source : "));
- 	sourceLabel = manage(new Gtk::Label("no source"));
-	lineTwo = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,0));
- 	size = manage(new Gtk::Label("size : "));
- 	sizeValue = manage(new Gtk::Label("0 byte"));
+	status = Gtk::manage(new Gtk::Label("No EBUCore metadata detected"));
+ 	lineOne = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,0));
+ 	source = Gtk::manage(new Gtk::Label("source : "));
+ 	sourceLabel = Gtk::manage(new Gtk::Label("no source"));
+	lineTwo = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,0));
+ 	size = Gtk::manage(new Gtk::Label("size : "));
+ 	sizeValue = Gtk::manage(new Gtk::Label("0 byte"));
 	status->show();
 	source->show();
 	sourceLabel->show();
