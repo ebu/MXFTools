@@ -33,7 +33,7 @@ customEntry::customEntry
 	screen = Gdk::Screen::get_default();
 	
 	css = Gtk::CssProvider::create();
-	if(not css->load_from_path("css.css")) {
+	if(!css->load_from_path("css.css")) {
 		std::cout << "Failed to load css"<<std::endl;
 	}
 	
