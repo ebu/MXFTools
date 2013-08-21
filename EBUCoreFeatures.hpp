@@ -197,7 +197,7 @@ class EBUCoreFeatures {
 		bool isDCSimpleType(std::string str);
 		bool isStandardType(std::string str);
 		bool isEBUCoreType(std::string str);
-		int isUnbounded(std::string max);
+		int isUnbounded(std::string maximum);
 
 		bool groupExist(std::string str);
 		void extractSchema(std::string pathtofile);

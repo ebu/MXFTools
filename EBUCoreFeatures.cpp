@@ -320,7 +320,7 @@ int EBUCoreFeatures::getSchemas
 	// while not the end of folder
 	while ((dirp = readdir(dp)) != NULL) {
 		// if it is am xsd file then
-		if (dirp->d_type == DT_REG and genericFeatures::isExtension(dirp->d_name, "xsd"))
+		if (dirp->d_type == DT_REG && genericFeatures::isExtension(dirp->d_name, "xsd"))
 			// save the schema filename inside the vector
 			files.push_back(std::string(dirp->d_name));
 	}
@@ -389,11 +389,11 @@ std::list<EBUCoreFeatures::AttributeStruct> EBUCoreFeatures::generateAttributes
 	if (father =="") {
 		// we must save the current position
 		xercesc::DOMElement * tmp = el->getFirstElementChild();
-		while (tmp != 0  and (std::string)(xercesc::XMLString::transcode(tmp->getTagName())) != "complexType") {
+		while (tmp != 0  && (std::string)(xercesc::XMLString::transcode(tmp->getTagName())) != "complexType") {
 			tmp = tmp->getNextElementSibling();// next
 		}
 		// and looking for the implicit father complexType (without name)
-		if (tmp != 0 and (std::string)(xercesc::XMLString::transcode(tmp->getTagName())) == "complexType" ) {
+		if (tmp != 0 && (std::string)(xercesc::XMLString::transcode(tmp->getTagName())) == "complexType" ) {
 			// when the complexType is identified, put the cursor inside the first child
 			tmp = tmp->getFirstElementChild();
 			// while xercesc pointer not null
@@ -480,7 +480,7 @@ std::list<EBUCoreFeatures::AttributeStruct> EBUCoreFeatures::generateAttributes
 		tmpEl=(dynamic_cast<xercesc::DOMElement*>(tmpEl->getParentNode()))->getFirstElementChild();
 		
 		// looking for a complexType or an attributeGroup with the right name 
-		while (((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i) ) or ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "attributeGroup" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i))) {
+		while (((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i) ) || ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "attributeGroup" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != groupName.at(i))) {
 			tmpEl = tmpEl->getNextElementSibling();
 		}
 		//grab the first child
@@ -536,7 +536,7 @@ std::list<std::list<std::string>> EBUCoreFeatures::generateChoices
 	{
 		xercesc::DOMElement * tmpEl = el;
 		// while xercesc pointer not null, element different of complexType with the proper name
-		while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) 
+		while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" || xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) 
 		{
 			tmpEl = tmpEl->getNextElementSibling();// next
 		}
@@ -544,7 +544,7 @@ std::list<std::list<std::string>> EBUCoreFeatures::generateChoices
 			// grab the first child of proper element
 			tmpEl=tmpEl->getFirstElementChild();
 			// looking for the choice/sequence of elements
-			while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") 
+			while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") 
 			{
 				tmpEl = tmpEl->getNextElementSibling(); // next
 			}
@@ -556,12 +556,12 @@ std::list<std::list<std::string>> EBUCoreFeatures::generateChoices
 					tmpEl=tmpEl->getFirstElementChild();
 				}
 				// looking for choice tag
-				while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice") 
+				while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice") 
 				{
 					tmpEl = tmpEl->getNextElementSibling(); // next
 				}
 				// if pointer not null, grab the first child of the current choice
-				if (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "choice") 
+				if (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "choice") 
 				{
 					tmpEl=tmpEl->getFirstElementChild();
 				}
@@ -611,7 +611,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateLocalChildren
 	// copy the current position of xercesc pointer
 	xercesc::DOMElement * tmpEl = cursor;
 	
-	while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType")) 
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType")) 
 	{
 		tmpEl = tmpEl->getNextElementSibling();
 	}
@@ -621,7 +621,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateLocalChildren
 		tmpEl=tmpEl->getFirstElementChild();
 	}
 	
-	while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence")) 
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence")) 
 	{
 		tmpEl = tmpEl->getNextElementSibling();
 	}
@@ -639,15 +639,15 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateLocalChildren
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the children struct
 			EBUCoreFeatures::ElementStruct internalChildren;
 			// grab the right name/references
 			internalChildren.name = (name.size()>0)?name:ref;
 			// identify the cardinality and the type of element
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			internalChildren.choices = generateChoices(((isEBUCoreType(internalChildren.type))?genericFeatures::removePrefix(internalChildren.type, ":"):""), el);
 			// if type is not standard
@@ -665,13 +665,13 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateLocalChildren
 				}
 			}
 			// if element type is ebucore and the type not present in the stack, then
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
 				internalChildren.children = generateChildren(genericFeatures::removePrefix(internalChildren.type,":"), el);
 				ebucoreStack.pop_back(); // pop the type
 			}
-			else if (internalChildren.type == "" and tmpEl->getFirstElementChild() != 0)
+			else if (internalChildren.type == "" && tmpEl->getFirstElementChild() != 0)
 			{
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
@@ -719,17 +719,17 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChildren
 	// copy the current position of xercesc pointer
 	xercesc::DOMElement * tmpEl = el;
 	// while xercesc pointer not null, element different of complexType with the proper name
-	while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" || xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
 		tmpEl = tmpEl->getNextElementSibling();// next
 	}
 	// grab the first child of proper element
 	tmpEl=tmpEl->getFirstElementChild();
 	// looking for the sequence of elements
-	while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence" and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexContent") 
+	while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence" && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexContent") 
 	{
 		tmpEl = tmpEl->getNextElementSibling(); // next
 	}
-	if (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "complexContent" and father != "")
+	if (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "complexContent" && father != "")
 	{
 		tmpEl=tmpEl->getFirstElementChild();
 		localExtension =(std::string)(xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("base"))));
@@ -748,15 +748,15 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChildren
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the children struct
 			EBUCoreFeatures::ElementStruct internalChildren;
 			// grab the right name/references
 			internalChildren.name = (name.size()>0)?name:ref;
 			// identify the cardinality and the type of element
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			internalChildren.choices = generateChoices(((isEBUCoreType(internalChildren.type))?genericFeatures::removePrefix(internalChildren.type, ":"):""), el);
 			
@@ -775,13 +775,13 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChildren
 				}
 			}
 			// if element type is ebucore and the type not present in the stack, then
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
 				internalChildren.children = generateChildren(genericFeatures::removePrefix(internalChildren.type,":"), el);
 				ebucoreStack.pop_back(); // pop the type
 			}
-			else if (internalChildren.type == "" and tmpEl->getFirstElementChild() != 0)
+			else if (internalChildren.type == "" && tmpEl->getFirstElementChild() != 0)
 			{
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
@@ -812,7 +812,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChildren
 		tmpEl = tmpEl->getNextElementSibling(); // next
 	}
 	
-	if (localExtension != "" and localExtension != "dc:elementType") 
+	if (localExtension != "" && localExtension != "dc:elementType") 
 	{
 		children = generateExtensionChildren
 		(
@@ -844,17 +844,17 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateExtensionChil
 	// store the current position of xercesc pointer	
 	xercesc::DOMElement * tmpEl = el;
 	// while xercesc pointer not null, element different of complexType with the proper name
-	while (tmpEl != 0  and ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" || xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
 		tmpEl = tmpEl->getNextElementSibling();// next
 	}
 	// grab the first child of proper element
 	tmpEl=tmpEl->getFirstElementChild();
 	// looking for the sequence of elements
-	while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence" and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexContent") 
+	while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice" && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence" && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexContent") 
 	{
 		tmpEl = tmpEl->getNextElementSibling(); // next
 	}
-	if (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "complexContent" and father != "")
+	if (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "complexContent" && father != "")
 	{
 		tmpEl=tmpEl->getFirstElementChild();
 		localExtension =(std::string)(xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("base"))));
@@ -874,15 +874,15 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateExtensionChil
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the children struct
 			EBUCoreFeatures::ElementStruct internalChildren;
 			// grab the right name/references
 			internalChildren.name = (name.size()>0)?name:ref;
 			// identify the cardinality and the type of element
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			internalChildren.choices = generateChoices(((isEBUCoreType(internalChildren.type))?genericFeatures::removePrefix(internalChildren.type, ":"):""), el);
 			// if type is not standard
@@ -900,13 +900,13 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateExtensionChil
 				}
 			}
 			// if element type is ebucore and the type not present in the stack, then
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
 				internalChildren.children = generateChildren(genericFeatures::removePrefix(internalChildren.type,":"), el);
 				ebucoreStack.pop_back(); // pop the type
 			}
-			else if (internalChildren.type == "" and tmpEl->getFirstElementChild() != 0)
+			else if (internalChildren.type == "" && tmpEl->getFirstElementChild() != 0)
 			{
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
@@ -937,7 +937,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateExtensionChil
 		tmpEl = tmpEl->getNextElementSibling(); // next
 	}
 	
-	if (localExtension != "" and localExtension != "dc:elementType") 
+	if (localExtension != "" && localExtension != "dc:elementType") 
 	{
 		children = generateExtensionChildren
 		(
@@ -962,13 +962,13 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateGroupChildren
 	// store the current position of xercesc pointer	
 	xercesc::DOMElement * tmpEl = el;
 	// looking for the group who contains the other elements with the father name
-	while (tmpEl != 0  and not ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "group" and xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) == genericFeatures::removePrefix(father,":") )) {
+	while (tmpEl != 0  && !((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) == "group" && xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) == genericFeatures::removePrefix(father,":") )) {
 		tmpEl = tmpEl->getNextElementSibling();
 	}
 	// enter inside the group
 	tmpEl=tmpEl->getFirstElementChild();
 	// looking for the sequence
-	while (tmpEl != 0 and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
+	while (tmpEl != 0 && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "sequence") {
 		tmpEl = tmpEl->getNextElementSibling();
 	}
 	// if pointer not null, grab the first child
@@ -983,16 +983,16 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateGroupChildren
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the list of children
 			EBUCoreFeatures::ElementStruct internalChildren;
 			// identify the element name
 			internalChildren.name = (name.size()>0)?name:ref;
 			internalChildren.hasChoice = false;
 			// identify the cardinality and type
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			internalChildren.choices = generateChoices(((isEBUCoreType(internalChildren.type))?genericFeatures::removePrefix(internalChildren.type, ":"):""), el);
 			// if it is not a standard type
@@ -1011,7 +1011,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateGroupChildren
 			}
 			
 			// if it is an ebucore element and the type of this element is not present in the element type stack
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				// push the type
 				ebucoreStack.push_back(internalChildren.type);
 				// generate children
@@ -1019,7 +1019,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateGroupChildren
 				// pop the type				
 				ebucoreStack.pop_back();
 			}
-			else if (internalChildren.type == "" and tmpEl->getFirstElementChild() != 0)
+			else if (internalChildren.type == "" && tmpEl->getFirstElementChild() != 0)
 			{
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
@@ -1064,7 +1064,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChoiceChildre
 	// store the current position of xercesc pointer	
 	xercesc::DOMElement * tmpEl = el;
 	// looking for the group who contains the other elements with the father name
-	while (tmpEl != 0  and (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice") {
+	while (tmpEl != 0  && (std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "choice") {
 		tmpEl = tmpEl->getNextElementSibling();
 	} // choice
 	// enter inside the group
@@ -1087,16 +1087,16 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChoiceChildre
 			std::string name (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))));
 			std::string type (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("type"))));
 			std::string ref (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("ref"))));
-			std::string min (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-			std::string max (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+			std::string minimum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+			std::string maximum (xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 			// instantiate the list of children
 			EBUCoreFeatures::ElementStruct internalChildren;
 			// identify the element name
 			internalChildren.name = (name.size()>0)?name:ref;
 			internalChildren.hasChoice = false;
 			// identify the cardinality and type
-			internalChildren.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-			internalChildren.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+			internalChildren.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+			internalChildren.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 			internalChildren.type = ( (type.size()>0) ? type : "" );
 			internalChildren.choices = generateChoices(((isEBUCoreType(internalChildren.type))?genericFeatures::removePrefix(internalChildren.type, ":"):""), el);
 			// if it is not a standard type
@@ -1114,7 +1114,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChoiceChildre
 				}
 			}
 			// if it is an ebucore element and the type of this element is not present in the element type stack
-			if (isEBUCoreType(internalChildren.type) and !groupExist(internalChildren.type)) {
+			if (isEBUCoreType(internalChildren.type) && !groupExist(internalChildren.type)) {
 				// push the type
 				ebucoreStack.push_back(internalChildren.type);
 				// generate children
@@ -1122,7 +1122,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChoiceChildre
 				// pop the type
 				ebucoreStack.pop_back();
 			}
-			else if (internalChildren.type == "" and tmpEl->getFirstElementChild() != 0)
+			else if (internalChildren.type == "" && tmpEl->getFirstElementChild() != 0)
 			{
 				ebucoreStack.push_back(internalChildren.type); // push the type
 				// generate the children
@@ -1151,7 +1151,7 @@ std::list<EBUCoreFeatures::ElementStruct> EBUCoreFeatures::generateChoiceChildre
 		}
 		// next
 		tmpEl = tmpEl->getNextElementSibling();
-		if (sequence and tmpEl == 0) {
+		if (sequence && tmpEl == 0) {
 			sequence = false;
 			tmpEl = memSequence;
 			tmpEl = tmpEl->getNextElementSibling();
@@ -1203,7 +1203,7 @@ EBUCoreFeatures::ElementStruct EBUCoreFeatures::getReference
 	EBUCoreFeatures::ElementStruct skeleton = ebucoremodel.at(0);
 	path.erase(0,1); // delete first #
 	
-	while(path.size() != 0 and path != skeleton.name) 
+	while(path.size() != 0 && path != skeleton.name) 
 	{
 //		std::cout 
 //		<< "current path : " <<path<<std::endl
@@ -1305,15 +1305,15 @@ EBUCoreFeatures::ElementStruct EBUCoreFeatures::constructSchema
 	std::string str (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("name"))));
 	std::string type (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("type"))));
 	std::string ref (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("ref"))));
-	std::string min (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
-	std::string max (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
+	std::string minimum (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("minOccurs"))));
+	std::string maximum (xercesc::XMLString::transcode(el->getAttribute (xercesc::XMLString::transcode("maxOccurs"))));
 	// instantiate a new root
 	EBUCoreFeatures::ElementStruct root;
 	// grab the name, the cardinalities, the type, attributes and children
 	root.name = (str.size()>0)?str:ref;
 	root.hasChoice = false;
-	root.minCardinality = ((min.size()>0)?atoi(min.c_str()):1);
-	root.maxCardinality = ((max.size()>0)?isUnbounded(max):1);
+	root.minCardinality = ((minimum.size()>0)?atoi(minimum.c_str()):1);
+	root.maxCardinality = ((maximum.size()>0)?isUnbounded(maximum):1);
 	root.type = ((type.size()>0)?type:"undefined");
 	// store the current element type inside the stack to avoid infinite loops
 	ebucoreStack.push_back(root.type);
@@ -1369,10 +1369,10 @@ bool EBUCoreFeatures::isEBUCoreType
 // test if element is unbounded or not
 int EBUCoreFeatures::isUnbounded
 (
-	std::string max
+	std::string maximum
 ) 
 {
-	return ((max == "unbounded")?-1:std::atoi(max.c_str()));
+	return ((maximum == "unbounded")?-1:std::atoi(maximum.c_str()));
 }
 
 // test if an ebucore type is present in the ebucoreStack
