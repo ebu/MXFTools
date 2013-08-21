@@ -212,8 +212,7 @@ struct RawInput
 //const char DEFAULT_SHIM_NAME[]       = "Sample File";
 //const char DEFAULT_SHIM_ID[]         = "http://bbc.co.uk/rd/as02/default-shim.txt";
 //const char DEFAULT_SHIM_ANNOTATION[] = "Default AS-02 shim";
-
-const Rational DEFAULT_SAMPLING_RATE = SAMPLING_RATE_48K;
+//const Rational DEFAULT_SAMPLING_RATE = SAMPLING_RATE_48K;
 
 //namespace bmx
 //{
