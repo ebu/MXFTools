@@ -1557,12 +1557,21 @@ bool BMXMXFEngine::open_raw_reader
         input->raw_reader->Reset();
         return true;
     }
-
-    FILE *raw_file = fopen(input->filename, "rb");
-    if (!raw_file) {
-        log_error("Failed to open input file '%s': %s\n", input->filename, strerror(errno));
-        return false;
-    }
+	
+	 #ifdef _WIN32
+	 	FILE *raw_file;
+	 	fopen_s(&raw_file, input->filename, "rb");
+		if (!raw_file) {
+		     std::cout << "Failed to open input file " << input->filename << " : " << errno <<std::endl;
+		     return false;
+		}
+	 #else
+	 	FILE *raw_file = fopen(input->filename, "rb");
+		if (!raw_file) {
+		     log_error("Failed to open input file '%s': %s\n", input->filename, strerror(errno));
+		     return false;
+		}
+	 #endif;
 
     if (input->essence_type == AVCI100_1080I ||
         input->essence_type == AVCI100_1080P ||
