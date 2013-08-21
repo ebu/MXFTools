@@ -74,7 +74,7 @@ ebucoreParser::~ebucoreParser(void)
 		// while not the end of folder
 		while ((dirp = readdir(dp)) != NULL) {
 			// if it is am xsd file then
-			if (dirp->d_type == DT_REG and isExtension(dirp->d_name, "xsd"))
+			if (dirp->d_type == DT_REG && isExtension(dirp->d_name, "xsd"))
 				// save the schema filename inside the vector
 				files.push_back(std::string(dirp->d_name));
 		}
@@ -247,7 +247,7 @@ std::list<ebucoreParser::ElementStruct> ebucoreParser::generateChildren(std::str
 	// copy the current position of xercesc pointer
 	xercesc::DOMElement * tmpEl = el;
 	// while xercesc pointer not null, element different of complexType with the proper name
-	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" or xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
+	while (tmpEl != 0  && ((std::string)(xercesc::XMLString::transcode(tmpEl->getTagName())) != "complexType" || xercesc::XMLString::transcode(tmpEl->getAttribute (xercesc::XMLString::transcode("name"))) != father )) {
 		tmpEl = tmpEl->getNextElementSibling();// next
 	}
 	// grab the first child of proper element
@@ -456,8 +456,8 @@ bool ebucoreParser::isEBUCoreType(std::string str) {
 }
 
 // test if element is unbounded or not
-int ebucoreParser::isUnbounded(std::string max) {
-	return ((max == "unbounded")?-1:std::atoi(max.c_str()));
+int ebucoreParser::isUnbounded(std::string maximum) {
+	return ((maximum == "unbounded")?-1:std::atoi(maximum.c_str()));
 }
 
 // test if a filename has a particular extension
