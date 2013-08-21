@@ -184,7 +184,7 @@ public:
 		static wchar_t *string2wchar_t
 		(
 			const std::string &str
-		)
+		);
 	#endif
 	/**
 	 * @fn static std::vector<std::string> listFiles(std::string dir)
