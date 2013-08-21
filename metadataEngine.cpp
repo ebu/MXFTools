@@ -509,7 +509,7 @@ void metadataEngine::recursiveConstructTreeView
 	do {
 		viewportTreeMinimumWidth = (((xercesc::XMLString::stringLen(el->getTagName())*7)+(depth*16)) > viewportTreeMinimumWidth) ? ((xercesc::XMLString::stringLen(el->getTagName())*7)+(depth*16)) : viewportTreeMinimumWidth;
 		unsigned int lengthPathToRemove = 1;
-		if (el->hasChildNodes() and el->getChildElementCount() != 0) {
+		if (el->hasChildNodes() && el->getChildElementCount() != 0) {
 			// create a new expander to store the node children
 			Gtk::Expander * node = manage( new Gtk::Expander(xercesc::XMLString::transcode(el->getTagName())) );
 			// parse the schema path
@@ -802,7 +802,7 @@ void metadataEngine::on_openExpander_changed
 ) 
 {
 	// update the previous textual breadcrumb if required
-	if (previousnode->get_label() != "!###ImAnEmptyExpander###!" and !previouslabel) {		
+	if (previousnode->get_label() != "!###ImAnEmptyExpander###!" && !previouslabel) {		
 		previousnode->override_color(black, Gtk::STATE_FLAG_NORMAL);
 		previousnode->set_label(previousnode->get_label());
 	} else if (previouslabel) {
@@ -854,7 +854,7 @@ bool metadataEngine::on_press_label
 ) 
 {
 	if( (event->type == GDK_BUTTON_PRESS) && (event->button == 1) ) {
-		if (previousnode->get_label() != "!###ImAnEmptyExpander###!" and !previouslabel) {
+		if (previousnode->get_label() != "!###ImAnEmptyExpander###!" && !previouslabel) {
 			previousnode->override_color(black, Gtk::STATE_FLAG_NORMAL);
 			previousnode->set_label(previousnode->get_label());
 			previouslabel = !previouslabel;
@@ -1484,7 +1484,7 @@ bool metadataEngine::cardinalityAllows
 			cpt++;
 		}
 	}
-	if (cpt == 0 or cpt<max) {
+	if (cpt == 0 || cpt<max) {
 		return true;
 	} else {
 		return false;
