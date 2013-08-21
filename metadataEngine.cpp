@@ -511,7 +511,7 @@ void metadataEngine::recursiveConstructTreeView
 		unsigned int lengthPathToRemove = 1;
 		if (el->hasChildNodes() && el->getChildElementCount() != 0) {
 			// create a new expander to store the node children
-			Gtk::Expander * node = manage( new Gtk::Expander(xercesc::XMLString::transcode(el->getTagName())) );
+			Gtk::Expander * node = Gtk::manage( new Gtk::Expander(xercesc::XMLString::transcode(el->getTagName())) );
 			// parse the schema path
 			schemaPath = schemaPath+"#"+xercesc::XMLString::transcode(el->getTagName());
 			lengthPathToRemove += xercesc::XMLString::stringLen(el->getTagName());
@@ -528,12 +528,12 @@ void metadataEngine::recursiveConstructTreeView
 			// visit the first children of the current node
 			recursiveConstructTreeView(el->getFirstElementChild(), node ,depth+1);
 		} else {
-			Gtk::EventBox *eventLabel = manage(new Gtk::EventBox);
+			Gtk::EventBox *eventLabel = Gtk::manage(new Gtk::EventBox);
 			eventLabel->set_name(std::to_string(elReferences.size()));
 			// store the DOM element adress
 			elReferences.push_back(el);
 			// create a new label to store the node children
-			Gtk::Label * label = manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
+			Gtk::Label * label = Gtk::manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
 			// parse the schema path
 			schemaPath = schemaPath+"#"+xercesc::XMLString::transcode(el->getTagName());
 			lengthPathToRemove += xercesc::XMLString::stringLen(el->getTagName());
@@ -693,18 +693,18 @@ void metadataEngine::constructEditableNode
 		delete childbox.at(0);
 	}
 		
-	Gtk::Box * entryLevel = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,10));
+	Gtk::Box * entryLevel = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,10));
 	entryLevel->set_size_request(120, 150);
 	entryLevel->set_border_width(10);
 	
-	Gtk::Entry * editableEntry = manage(new Gtk::Entry());
+	Gtk::Entry * editableEntry = Gtk::manage(new Gtk::Entry());
 	editableEntry->set_text(xercesc::XMLString::transcode(el->getTagName()));
 	editableEntry->drag_highlight();
 	editableEntry->set_has_frame(false);
 	editableEntry->set_editable(false);
 	editableEntry->show();
 
-	Gtk::Label * nonEditableEntry = manage(new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
+	Gtk::Label * nonEditableEntry = Gtk::manage(new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())));
 	nonEditableEntry->set_alignment (Gtk::ALIGN_START,Gtk::ALIGN_CENTER);	
 	nonEditableEntry->set_padding(4,4);
 	nonEditableEntry->override_color(black, Gtk::STATE_FLAG_NORMAL);
@@ -712,20 +712,20 @@ void metadataEngine::constructEditableNode
 	nonEditableEntry->show();
 	
 
-	Gtk::Box * nodeTypeBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,10));
-	Gtk::Label * nodeTypeLabel = manage(new Gtk::Label("Type"));
-	Gtk::Label * nodeTypeValue = manage(new Gtk::Label());
+	Gtk::Box * nodeTypeBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,10));
+	Gtk::Label * nodeTypeLabel = Gtk::manage(new Gtk::Label("Type"));
+	Gtk::Label * nodeTypeValue = Gtk::manage(new Gtk::Label());
 	nodeTypeLabel->show();
 	nodeTypeValue->show();
 	nodeTypeBox->add(*nodeTypeLabel);
 	nodeTypeBox->add(*nodeTypeValue);
 	nodeTypeBox->show();
 
-	Gtk::Label * tagTitle = manage(new Gtk::Label("Tag name"));
+	Gtk::Label * tagTitle = Gtk::manage(new Gtk::Label("Tag name"));
 	tagTitle->set_justify(Gtk::JUSTIFY_LEFT);
 	tagTitle->set_halign(Gtk::ALIGN_START);
 	tagTitle->show();		
-	Gtk::Label * nodeContent = manage(new Gtk::Label());
+	Gtk::Label * nodeContent = Gtk::manage(new Gtk::Label());
 	nodeContent->set_justify(Gtk::JUSTIFY_LEFT);
 	nodeContent->set_halign(Gtk::ALIGN_START);
 	nodeContent->show();
@@ -748,9 +748,9 @@ void metadataEngine::constructEditableNode
 	} else {
 		nodeTypeValue->set_text("Lonely node");
 		nodeContent->set_text("Empty node");
-		Gtk::EventBox *eventLabel = manage(new Gtk::EventBox);
+		Gtk::EventBox *eventLabel = Gtk::manage(new Gtk::EventBox);
 		// create a new label to store the node children
-		Gtk::Label * label = manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())) );
+		Gtk::Label * label = Gtk::manage( new Gtk::Label(xercesc::XMLString::transcode(el->getTagName())) );
 		/// configure the new label
 		configureLabel(label);
 		/// configure the new eventbox and encapsulate the label
@@ -767,7 +767,7 @@ void metadataEngine::constructEditableNode
 	}
 	entryLevel->add(*nodeTypeBox);
 
-	Gtk::Label * nodeAttributeTitle = manage(new Gtk::Label("Node attributes"));
+	Gtk::Label * nodeAttributeTitle = Gtk::manage(new Gtk::Label("Node attributes"));
 	nodeAttributeTitle->set_justify(Gtk::JUSTIFY_LEFT);
 	nodeAttributeTitle->set_halign(Gtk::ALIGN_START);
 	nodeAttributeTitle->show();
@@ -897,13 +897,13 @@ void metadataEngine::configureNodeAttributesTreeview
 ) 
 {
 
-	Gtk::Box * AttributesTreeviewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+	Gtk::Box * AttributesTreeviewBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	AttributesTreeviewBox->set_size_request(120, 150);
 
-	Gtk::ScrolledWindow * metadataNodeAttributesScrolledWindow = manage(new Gtk::ScrolledWindow());
+	Gtk::ScrolledWindow * metadataNodeAttributesScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
 	metadataNodeAttributesScrolledWindow->set_size_request(120, 150);
 
-	Gtk::TreeView * metadataNodeAttributesTreeview = manage(new Gtk::TreeView());
+	Gtk::TreeView * metadataNodeAttributesTreeview = Gtk::manage(new Gtk::TreeView());
 	metadataNodeAttributesTreeview->drag_highlight();
 
 //Add the TreeView, inside a ScrolledWindow, with the button underneath:
@@ -991,13 +991,13 @@ void metadataEngine::configureNodeChildrenTreeview
 ) 
 {
 
-	Gtk::Box * ChildrenTreeviewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+	Gtk::Box * ChildrenTreeviewBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	ChildrenTreeviewBox->set_size_request(120, 150);
 
-	Gtk::ScrolledWindow * metadataNodeChildrenScrolledWindow = manage(new Gtk::ScrolledWindow());
+	Gtk::ScrolledWindow * metadataNodeChildrenScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
 	metadataNodeChildrenScrolledWindow->set_size_request(120, 150);
 
-	Gtk::TreeView * metadataNodeChildrenTreeview = manage(new Gtk::TreeView());
+	Gtk::TreeView * metadataNodeChildrenTreeview = Gtk::manage(new Gtk::TreeView());
 	metadataNodeChildrenTreeview->drag_highlight();
 
 //Add the TreeView, inside a ScrolledWindow, with the button underneath:
@@ -1077,13 +1077,13 @@ void metadataEngine::configureNodeText
 )
 {
 
-	Gtk::Box * nodeTextViewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
+	Gtk::Box * nodeTextViewBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,0));
 	nodeTextViewBox->set_size_request(120, 150);
 
-	Gtk::ScrolledWindow * nodeTextViewScrolledWindow = manage(new Gtk::ScrolledWindow());
+	Gtk::ScrolledWindow * nodeTextViewScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
 	nodeTextViewScrolledWindow->set_size_request(120, 150);
 
-	Gtk::TextView * nodeTextView = manage (new Gtk::TextView());
+	Gtk::TextView * nodeTextView = Gtk::manage (new Gtk::TextView());
 	nodeTextView->override_background_color(((EBUCoreSet->get_active())? white : whiteghost), Gtk::STATE_FLAG_NORMAL);
 	
 	nodeTextView->drag_highlight();
@@ -1140,15 +1140,15 @@ void metadataEngine::configureNodeAttributeEditionButtonsTreeview
 	Glib::RefPtr<Gtk::ListStore> attributeStore
 )
 {
-	Gtk::Box * EditButtonBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
+	Gtk::Box * EditButtonBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
 	EditButtonBox->set_hexpand (true);	
 	EditButtonBox->set_halign (Gtk::ALIGN_END);	
 	
-	Gtk::Button *addButton = manage(new Gtk::Button());
-	Gtk::Button *removeButton = manage(new Gtk::Button());
+	Gtk::Button *addButton = Gtk::manage(new Gtk::Button());
+	Gtk::Button *removeButton = Gtk::manage(new Gtk::Button());
 
-	Gtk::Image *addImage = manage(new Gtk::Image(Gtk::Stock::ADD,Gtk::ICON_SIZE_MENU));
-	Gtk::Image *removeImage = manage(new Gtk::Image(Gtk::Stock::REMOVE,Gtk::ICON_SIZE_MENU));
+	Gtk::Image *addImage = Gtk::manage(new Gtk::Image(Gtk::Stock::ADD,Gtk::ICON_SIZE_MENU));
+	Gtk::Image *removeImage = Gtk::manage(new Gtk::Image(Gtk::Stock::REMOVE,Gtk::ICON_SIZE_MENU));
 
 	addButton->set_image(*addImage);
 	removeButton->set_image(*removeImage);
@@ -1194,15 +1194,15 @@ void metadataEngine::configureNodeEditionButtonsTreeview
 	Glib::RefPtr<Gtk::ListStore> nodeStore
 ) 
 {
-	Gtk::Box * EditButtonBox = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
+	Gtk::Box * EditButtonBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
 	EditButtonBox->set_hexpand (true);	
 	EditButtonBox->set_halign (Gtk::ALIGN_END);	
 	
-	Gtk::Button *addButton = manage(new Gtk::Button());
-	Gtk::Button *removeButton = manage(new Gtk::Button());
+	Gtk::Button *addButton = Gtk::manage(new Gtk::Button());
+	Gtk::Button *removeButton = Gtk::manage(new Gtk::Button());
 
-	Gtk::Image *addImage = manage(new Gtk::Image(Gtk::Stock::ADD,Gtk::ICON_SIZE_MENU));
-	Gtk::Image *removeImage = manage(new Gtk::Image(Gtk::Stock::REMOVE,Gtk::ICON_SIZE_MENU));
+	Gtk::Image *addImage = Gtk::manage(new Gtk::Image(Gtk::Stock::ADD,Gtk::ICON_SIZE_MENU));
+	Gtk::Image *removeImage = Gtk::manage(new Gtk::Image(Gtk::Stock::REMOVE,Gtk::ICON_SIZE_MENU));
 
 	addButton->set_image(*addImage);
 	removeButton->set_image(*removeImage);
@@ -1352,21 +1352,21 @@ void metadataEngine::addNodeAttribute
 	metadataAssistant->set_modal(true);
 	metadataAssistant->set_title("Add a node attribute");
 
-	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
+	Gtk::Box * page1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
 
 ////////////// page 1
-	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
-	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));
-	Gtk::Box * page1hbox3 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
-	attributeValueBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,3));
+	Gtk::Box * page1hbox1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
+	Gtk::Box * page1hbox2 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));
+	Gtk::Box * page1hbox3 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));
+	attributeValueBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,3));
 
-	Gtk::AspectFrame * page1hbox1space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox2space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox3space1 = manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox1space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox2space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox3space1 = Gtk::manage(new Gtk::AspectFrame());
 
 
-	Gtk::Label * attributeNameTitle = manage(new Gtk::Label("Attribute :"));
-	addComboBoxText = manage (new Gtk::ComboBoxText(false));
+	Gtk::Label * attributeNameTitle = Gtk::manage(new Gtk::Label("Attribute :"));
+	addComboBoxText = Gtk::manage (new Gtk::ComboBoxText(false));
 	addComboBoxText->append("Select an attribute");
 	addComboBoxText->set_active(0);
 	for (std::list<EBUCoreFeatures::AttributeStruct>::iterator it=ebucoreRef.attribute.begin() ; it != ebucoreRef.attribute.end(); ++it) 
@@ -1393,7 +1393,7 @@ void metadataEngine::addNodeAttribute
 	page1hbox2->show_all_children();
 	page1hbox2->show();
 	
-	Gtk::Label * attributeValueTitle = manage(new Gtk::Label("Value :")); 
+	Gtk::Label * attributeValueTitle = Gtk::manage(new Gtk::Label("Value :")); 
 	// instanciate a new entry
 	attributeValueEntry = new customEntry
 	(
@@ -1404,8 +1404,8 @@ void metadataEngine::addNodeAttribute
 	page1hbox3->add(*attributeValueEntry);
 	page1hbox3->show_all_children();
 	
-	attributeValueDescription = manage(new Gtk::Label("Description..."));
-	attributeValueSample = manage(new Gtk::Label("Sample..."));
+	attributeValueDescription = Gtk::manage(new Gtk::Label("Description..."));
+	attributeValueSample = Gtk::manage(new Gtk::Label("Sample..."));
 	
 	attributeValueBox->add(*page1hbox3);
 	attributeValueBox->add(*attributeValueDescription);
@@ -1502,17 +1502,17 @@ void metadataEngine::addNode
 	metadataAssistant->set_modal(true);
 	metadataAssistant->set_title("Add a node");
 
-	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
+	Gtk::Box * page1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 2));
 
 ////////////// page 1
-	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
-	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));
+	Gtk::Box * page1hbox1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
+	Gtk::Box * page1hbox2 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));
 
-	Gtk::AspectFrame * page1hbox1space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox2space1 = manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox1space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox2space1 = Gtk::manage(new Gtk::AspectFrame());
 
-	Gtk::Label * attributeNameTitle = manage(new Gtk::Label("Node element :"));
-	addComboBoxText = manage (new Gtk::ComboBoxText(false));
+	Gtk::Label * attributeNameTitle = Gtk::manage(new Gtk::Label("Node element :"));
+	addComboBoxText = Gtk::manage (new Gtk::ComboBoxText(false));
 	addComboBoxText->append("Select an element");
 	addComboBoxText->set_active(0);
 	unsigned int cpt = 0;
@@ -1583,29 +1583,29 @@ void metadataEngine::addNode
 	metadataAssistant->set_modal(true);
 	metadataAssistant->set_title("Add a node");
 
-	Gtk::Box * page1 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	Gtk::Box * page2 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
-	Gtk::Box * page3 = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
+	Gtk::Box * page1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
+	Gtk::Box * page2 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
+	Gtk::Box * page3 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 3));
 
 ////////////// page 1
-	Gtk::Box * page1hbox1 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
-	Gtk::Box * page1hbox2 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));	
-	Gtk::Box * page1hbox3 = manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,5));	
+	Gtk::Box * page1hbox1 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,3));	
+	Gtk::Box * page1hbox2 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,1));	
+	Gtk::Box * page1hbox3 = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL,5));	
 
-	Gtk::AspectFrame * page1hbox1space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox2space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox3space1 = manage(new Gtk::AspectFrame());
-	Gtk::AspectFrame * page1hbox3space2 = manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox1space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox2space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox3space1 = Gtk::manage(new Gtk::AspectFrame());
+	Gtk::AspectFrame * page1hbox3space2 = Gtk::manage(new Gtk::AspectFrame());
 
 
-	Gtk::Label * tagNameTitle = manage(new Gtk::Label("Node name :"));
-	Gtk::Label * tagTypeTitle = manage(new Gtk::Label("Type node :")); 
+	Gtk::Label * tagNameTitle = Gtk::manage(new Gtk::Label("Node name :"));
+	Gtk::Label * tagTypeTitle = Gtk::manage(new Gtk::Label("Type node :")); 
 
-	tagValueEntry = manage(new Gtk::Entry());
+	tagValueEntry = Gtk::manage(new Gtk::Entry());
 	tagValueEntry->set_placeholder_text("Input the tag's name'");
 	Gtk::RadioButton::Group radioGroup;
-	Gtk::RadioButton *page1hbox3radiobutton1 = manage(new Gtk::RadioButton(radioGroup, "text", true));
-	Gtk::RadioButton *page1hbox3radiobutton2 = manage(new Gtk::RadioButton(radioGroup, "node", false));
+	Gtk::RadioButton *page1hbox3radiobutton1 = Gtk::manage(new Gtk::RadioButton(radioGroup, "text", true));
+	Gtk::RadioButton *page1hbox3radiobutton2 = Gtk::manage(new Gtk::RadioButton(radioGroup, "node", false));
 	addNode_type=false;
 
 	page1hbox3radiobutton1->signal_toggled().connect
@@ -1659,18 +1659,18 @@ void metadataEngine::addNode
 	page1->show_all_children();
 
 // page 2
-	Gtk::Label * nodeTextTitle = manage(new Gtk::Label("Node text :"));
+	Gtk::Label * nodeTextTitle = Gtk::manage(new Gtk::Label("Node text :"));
 	nodeTextTitle->set_justify(Gtk::JUSTIFY_LEFT);
 	nodeTextTitle->set_halign(Gtk::ALIGN_START);
 
-	Gtk::Box * assistantTextViewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
+	Gtk::Box * assistantTextViewBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
 	assistantTextViewBox->set_size_request(120, 150);	
 	assistantTextViewBox->add(*nodeTextTitle);
 
-	Gtk::ScrolledWindow * assistantTextViewScrolledWindow = manage(new Gtk::ScrolledWindow());
+	Gtk::ScrolledWindow * assistantTextViewScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
 	assistantTextViewScrolledWindow->set_size_request(120, 150);
 
-	Gtk::TextView * assistantTextView = manage (new Gtk::TextView());
+	Gtk::TextView * assistantTextView = Gtk::manage (new Gtk::TextView());
 	
 	assistantTextView->drag_highlight();
 	assistantTextView->set_pixels_above_lines(2);
@@ -1698,18 +1698,18 @@ void metadataEngine::addNode
 // page 3
 /////
 
-	Gtk::Label * nodeChildrenTitle = manage(new Gtk::Label("Node children :"));
+	Gtk::Label * nodeChildrenTitle = Gtk::manage(new Gtk::Label("Node children :"));
 	nodeChildrenTitle->set_justify(Gtk::JUSTIFY_LEFT);
 	nodeChildrenTitle->set_halign(Gtk::ALIGN_START);
 
-	Gtk::Box * assistantNodeChildrenViewBox = manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
+	Gtk::Box * assistantNodeChildrenViewBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL,2));
 	assistantNodeChildrenViewBox->set_size_request(120, 150);	
 	assistantNodeChildrenViewBox->add(*nodeChildrenTitle);
 
-	Gtk::ScrolledWindow * assistantNodeChildrenViewScrolledWindow = manage(new Gtk::ScrolledWindow());
+	Gtk::ScrolledWindow * assistantNodeChildrenViewScrolledWindow = Gtk::manage(new Gtk::ScrolledWindow());
 	assistantNodeChildrenViewScrolledWindow->set_size_request(120, 150);
 
-	Gtk::TextView * assistantNodeChildrenView = manage (new Gtk::TextView());
+	Gtk::TextView * assistantNodeChildrenView = Gtk::manage (new Gtk::TextView());
 	
 	assistantNodeChildrenView->drag_highlight();
 	assistantNodeChildrenView->set_pixels_above_lines(2);
