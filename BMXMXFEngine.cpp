@@ -1615,7 +1615,7 @@ void BMXMXFEngine::init_input
     memset(input, 0, sizeof(*input));
     input->aspect_ratio = ASPECT_RATIO_16_9;
     input->aspect_ratio_set = false;
-    input->sampling_rate = DEFAULT_SAMPLING_RATE;
+    input->sampling_rate = SAMPLING_RATE_48K;
     input->component_depth = 8;
     input->audio_quant_bits = 16;
 }
