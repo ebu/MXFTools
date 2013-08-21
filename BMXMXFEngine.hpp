@@ -41,6 +41,13 @@
 
 #include <mxf/mxf_avid.h>
 
+#ifdef _WIN32
+	#include <mxf/mxf_win32_file.h>
+	#ifndef _CRT_SECURE_NO_WARNINGS
+		#define _CRT_SECURE_NO_WARNINGS
+	#endif
+#endif
+
 
 #define DEFAULT_BEXT_ORIGINATOR "bmx"
 
