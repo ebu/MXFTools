@@ -101,12 +101,7 @@ unsigned long int genericFeatures::getFileSize
 ) 
 {
 	unsigned long int size = 0;
-	#ifdef _WIN32
-		FILE * fp;
-		fopen_s (&fp, filename.c_str(),"rb");
-	#else
-		FILE * fp = fopen (filename.c_str(),"rb");
-	#endif
+	FILE * fp = fopen (filename.c_str(),"rb");
 	if (fp!=NULL) {
 		fseek (fp, 0, SEEK_END);
 		size = ftell (fp);

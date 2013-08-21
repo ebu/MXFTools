@@ -25,6 +25,9 @@
 #include <chrono>
 #ifdef _WIN32
 	#include <windows.h>
+	#ifndef _CRT_SECURE_NO_DEFINED
+		#define _CRT_SECURE_NO_DEFINED
+	#endif
 #else
 	#include <dirent.h>
 	#include <sys/types.h>
