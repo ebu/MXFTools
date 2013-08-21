@@ -290,7 +290,7 @@ void EBUCoreFeatures::progress_cb
 	case EBUSDK::EBUCore::DEBUG:
 	case EBUSDK::EBUCore::TRACE:
 		bmx::log_debug(newline_msg_format, p_arg); return;
-	case EBUSDK::EBUCore::ERROR:
+	case 1:
 		bmx::log_error(newline_msg_format, p_arg); return;
 	case EBUSDK::EBUCore::WARN:
 		bmx::log_warn(newline_msg_format, p_arg); return;
