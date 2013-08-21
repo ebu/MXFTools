@@ -27,33 +27,12 @@
 #include <bmx/BMXException.h>
 #include <bmx/Logging.h>
 
-#ifdef _WIN64	
+#ifdef _WIN32
 	#include <mxf/mxf_win32_file.h>
-   //define libraries for Windows (64-bit)
-#elif _WIN32
-	#include <mxf/mxf_win32_file.h>
-//#elif __APPLE__
-
-//    #if TARGET_OS_IPHONE    
-         // iOS device
-//    #elif TARGET_IPHONE_SIMULATOR
-        // iOS Simulator
-//    #elif TARGET_OS_MAC
-        // Other kinds of Mac OS
-//    #else
-        // Unsupported platform
-//    #endif
-#elif __linux
-	#include <EBUCoreProcessor.h>
-    // linux
-//#elif __unix // all unices not caught above
-    // Unix
-//#elif __posix
-    // POSIX
 #endif
 
+#include <EBUCoreProcessor.h>
 #include <Analyzer.h>
-
 #include <MXFCustomMetadata.h>
 
 #include <xercesc/dom/DOM.hpp>
