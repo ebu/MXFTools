@@ -61,8 +61,8 @@ metadataEncapsulationDialog::metadataEncapsulationDialog
 	pathOutputBox->pack_start(*pathOutputEntry);
 	pathOutputBox->pack_start(*pathOutputButton);
 	// define buttonbox
-	Gtk::ButtonBox * partitionButtonBox = manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
-	Gtk::ButtonBox * encodingButtonBox = manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
+	Gtk::ButtonBox * partitionButtonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
+	Gtk::ButtonBox * encodingButtonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
 	// define radio buttons
 	Gtk::RadioButton::Group partitionGroup;
     partitionHeader = Gtk::manage(new Gtk::RadioButton(partitionGroup,"header partition"));
