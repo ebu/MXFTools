@@ -14,7 +14,7 @@
  */
 
 
-#include <gstreamermm.h>
+
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/togglebutton.h>
 #if defined (GDK_WINDOWING_X11)
@@ -28,6 +28,20 @@
 #include <glibmm/main.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/convert.h>
+
+#include <gstreamermm/init.h>
+#include <gstreamermm/element.h>
+#include <gstreamermm/pipeline.h>
+#include <gstreamermm/pad.h>
+#include <gstreamermm/bus.h>
+#include <gstreamermm/playbin.h>
+#include <gstreamermm/caps.h>
+#include <gstreamermm/clock.h>
+#include <gstreamermm/buffer.h>
+#include <gstreamermm/event.h>
+#include <gstreamermm/message.h>
+#include <gstreamermm/query.h>
+#include <gstreamermm/videooverlay.h>
 
 #include <iostream>
 #include <string.h>
@@ -168,8 +182,8 @@ class playerEngine {
 		);
  
 	protected:
-		Glib::RefPtr<Gst::PlayBin2> playout;/*!< playout needs more documentation*/
-		Glib::RefPtr<Gst::XImageSink> video_sink;/*!< video_sink needs more documentation*/
+		Glib::RefPtr<Gst::PlayBin> playout;/*!< playout needs more documentation*/
+		//Glib::RefPtr<Gst::XImageSink> video_sink;/*!< video_sink needs more documentation*/
 		Glib::RefPtr<Gst::Bus> bus; /*!< bus needs more documentation*/
 		guint watch_id;/*!< watch_id needs more documentation*/
 		gulong x_window_id;/*!< x_window_id needs more documentation*/
@@ -227,10 +241,10 @@ class playerEngine {
 		* @param[in] buffer : const Glib::RefPtr<Gst::MiniObject>&
 		* @return a bool if all is right or an error at compilation time.
 		*/
-		bool on_video_pad_got_buffer
+		Gst::PadProbeReturn on_video_pad_got_buffer
 		(
 			const Glib::RefPtr<Gst::Pad>& pad,
-			const Glib::RefPtr<Gst::MiniObject>& data
+        	const Gst::PadProbeInfo& data
 		);
 		
 		std::string getStateString
@@ -262,6 +276,11 @@ class playerEngine {
 		);
 		
 		bool on_forward_timeout
+		(
+			void
+		);
+		
+		void on_video_changed
 		(
 			void
 		);

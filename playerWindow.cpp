@@ -36,7 +36,7 @@ playerWindow::playerWindow
 	connectSignalClicked(); // clicked 
 	connectSignalActivate(); // activate
 	connectSignalChangeValue(); // changeValue
-	connectSignalRealize(); // realize
+	//connectSignalRealize(); // realize
 	
 	// To initialize all Gtk widgets and mediaplayer's variables
 	initMPStates();
@@ -205,7 +205,7 @@ void playerWindow::initMPStates
 	volume_scale->add_mark(2.0, Gtk::POS_TOP, visualMark);
 
 	// initialize the background color of the drawing area
-	videoDrawingArea->override_background_color(Gdk::RGBA("black"));
+	videoDrawingArea->override_background_color(Gdk::RGBA("white"));
 	videoDrawingArea->show();
 	
 	// mediaplayer window initial position

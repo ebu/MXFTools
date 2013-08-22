@@ -25,7 +25,7 @@ playerEngine::playerEngine
 	initStates();
 	/* playbin2 plays any media type, choosing an appropriate 
 	set of elements and linking them together. */
-	playout = Gst::PlayBin2::create("playbin");
+	playout = Gst::PlayBin::create("playbin");
 	std::cerr << "The playbin " 
 	<< (
 		(!playout) ? 
@@ -34,17 +34,17 @@ playerEngine::playerEngine
 		) 
 	<<"."<< std::endl;
 	// Create a video sink where video (if any) will be drawn
-	video_sink = Gst::XImageSink::create("ximagesink");
+/*	video_sink = Gst::XImageSink::create("ximagesink");
 	std::cerr << "The ximagesink " 
 	<< (
 		(!video_sink) ? 
 		"could not be created" : 
 		"has been sucessfully created"
 		) 
-	<<"." <<std::endl;
+	<<"." <<std::endl; */
 	/* Set the playbin's video-sink property so that our video
 	sink is used for video display */
-	playout->property_video_sink() = video_sink;
+/*	playout->property_video_sink() = video_sink; */
 	// Get the bus from the pipeline
 	bus = playout->get_bus();
 	/* Enable synchronous message emission to set up video 
@@ -58,6 +58,16 @@ playerEngine::playerEngine
 	// Add a bus watch to receive messages from the pipeline's bus
 	watch_id = bus->add_watch(
 	sigc::mem_fun(*this, &playerEngine::on_bus_message) );
+
+/*	playout->signal_video_changed().connect
+	(
+		sigc::mem_fun
+		(
+			*this, 
+			&playerEngine::on_video_changed
+		)
+	);
+*/
 }
 
 playerEngine::~playerEngine()
@@ -96,11 +106,18 @@ void playerEngine::on_bus_message_sync
 	Glib::RefPtr<Gst::Element> element =
 	Glib::RefPtr<Gst::Element>::cast_dynamic(message->get_source());
 
-	Glib::RefPtr< Gst::ElementInterfaced<Gst::XOverlay> > xoverlay =
+/*	Glib::RefPtr< Gst::ElementInterfaced<Gst::XOverlay> > xoverlay =
 	Gst::Interface::cast <Gst::XOverlay>(element);
 
 	if(xoverlay)
 		xoverlay->set_xwindow_id(x_window_id);
+*/
+  Glib::RefPtr< Gst::VideoOverlay > videooverlay = Glib::RefPtr<Gst::VideoOverlay>::cast_dynamic(element);
+
+  if(videooverlay)
+  {
+      videooverlay->set_window_handle(x_window_id);
+  }
 }
 
 // This function is used to receive asynchronous messages from playbin's bus
@@ -115,10 +132,9 @@ bool playerEngine::on_bus_message
 		/* an error occured. When the application receives an 
 		error message it should stop playback of the pipeline 
 		and not assume that more data will be played. */ 
-    	case Gst::MESSAGE_ERROR:
+    	case GST_MESSAGE_ERROR:
     	{
-      		Glib::RefPtr<Gst::MessageError> msgError =
-      		Glib::RefPtr<Gst::MessageError>::cast_dynamic(message);
+      	Glib::RefPtr<Gst::MessageError> msgError = Glib::RefPtr<Gst::MessageError>::cast_static(message);
 			if(msgError)
 			{
 				Glib::Error err;
@@ -135,7 +151,7 @@ bool playerEngine::on_bus_message
 		every time it sets a pipeline to PLAYING that is in the 
 		EOS state. The application can perform a flushing seek 
 		in the pipeline, which will undo the EOS state again. */ 
-    	case Gst::MESSAGE_EOS: 
+    	case GST_MESSAGE_EOS: 
     	{
     		// reset playout state
     		playout->set_state(Gst::STATE_NULL);
@@ -150,13 +166,13 @@ bool playerEngine::on_bus_message
     		(*EOSState).set_active(!(*EOSState).get_active());
     	} break;
     	// undefined message 	
-		case Gst::MESSAGE_UNKNOWN: {} break;
+		case GST_MESSAGE_UNKNOWN: {} break;
 		// a warning occured
-    	case Gst::MESSAGE_WARNING: {} break;
+    	case GST_MESSAGE_WARNING: {} break;
 		// an info message occured 
-    	case Gst::MESSAGE_INFO: {} break;
+    	case GST_MESSAGE_INFO: {} break;
 		// a tag was found
-    	case Gst::MESSAGE_TAG: {} break;
+    	case GST_MESSAGE_TAG: {} break;
 		/* the pipeline is buffering. When the application receives 
 		a buffering message in the PLAYING state for a non-live 
 		pipeline it must PAUSE the pipeline until the buffering 
@@ -164,50 +180,50 @@ bool playerEngine::on_bus_message
 		For live pipelines, no action must be performed and the 
 		buffering percentage can be used to inform the user about 
 		the progress. */
-    	case Gst::MESSAGE_BUFFERING: {} break;
+    	case GST_MESSAGE_BUFFERING: {} break;
 		// a state change happened 
-    	case Gst::MESSAGE_STATE_CHANGED: {} break;
+    	case GST_MESSAGE_STATE_CHANGED: {} break;
 		/* an element changed state in a streaming thread. 
 		This message is deprecated. */ 
-    	case Gst::MESSAGE_STATE_DIRTY: {} break;
+    	case GST_MESSAGE_STATE_DIRTY: {} break;
 		// a stepping operation finished
-    	case Gst::MESSAGE_STEP_DONE: {} break;
+    	case GST_MESSAGE_STEP_DONE: {} break;
 		/* an element notifies its capability of providing a clock. 
 		This message is used internally and never forwarded to the 
 		application. */ 
-    	case Gst::MESSAGE_CLOCK_PROVIDE: {} break;
+    	case GST_MESSAGE_CLOCK_PROVIDE: {} break;
 		/* The current clock as selected by the pipeline became 
 		unusable. The pipeline will select a new clock on the next 
 		PLAYING state change. The application should set the 
 		pipeline to PAUSED and back to PLAYING when this message 
 		is received. */ 
-    	case Gst::MESSAGE_CLOCK_LOST: {} break;
+    	case GST_MESSAGE_CLOCK_LOST: {} break;
 		// a new clock was selected in the pipeline.
-    	case Gst::MESSAGE_NEW_CLOCK: {} break;
+    	case GST_MESSAGE_NEW_CLOCK: {} break;
 		/* the structure of the pipeline changed. This message is 
 		used internally and never forwarded to the application. */ 
-    	case Gst::MESSAGE_STRUCTURE_CHANGE: {} break;
+    	case GST_MESSAGE_STRUCTURE_CHANGE: {} break;
 		/* status about a stream, emitted when it starts, stops, 
 		errors, etc */ 
-    	case Gst::MESSAGE_STREAM_STATUS: {} break;
+    	case GST_MESSAGE_STREAM_STATUS: {} break;
 		/* message posted by the application, possibly via an 
 		application-specific element. */ 
-    	case Gst::MESSAGE_APPLICATION: {} break;
+    	case GST_MESSAGE_APPLICATION: {} break;
 		// element-specific message
-    	case Gst::MESSAGE_ELEMENT: {} break;
+    	case GST_MESSAGE_ELEMENT: {} break;
 		/* pipeline started playback of a segment. This message is 
 		used internally and never forwarded to the application. */ 
-    	case Gst::MESSAGE_SEGMENT_START: {} break;
+    	case GST_MESSAGE_SEGMENT_START: {} break;
 		/* pipeline completed playback of a segment. This message is 
 		forwarded to the application after all elements that posted 
 		GST_MESSAGE_SEGMENT_START posted a GST_MESSAGE_SEGMENT_DONE 
 		message. */
-    	case Gst::MESSAGE_SEGMENT_DONE: {} break;
+    	case GST_MESSAGE_SEGMENT_DONE: {} break;
 		/* The duration of a pipeline changed. The application can 
 		get the new duration with a duration query. */ 
-    	case Gst::MESSAGE_DURATION: 
+    	case GST_MESSAGE_DURATION_CHANGED: 
     	{
-    		Glib::RefPtr<Gst::MessageDuration> durationMsg = Glib::RefPtr<Gst::MessageDuration>::cast_dynamic(message);
+    		Glib::RefPtr<Gst::MessageDuration> durationMsg = Glib::RefPtr<Gst::MessageDuration>::cast_static(message);
     		if (durationMsg)
 			{
 				std::cout<<"Duration : "<< durationMsg->parse() / Gst::SECOND<<std::endl;
@@ -215,38 +231,41 @@ bool playerEngine::on_bus_message
     	} break;
 		/* Posted by elements when their latency changes. The 
 		application should recalculate & distribute a new latency.*/
-    	case Gst::MESSAGE_LATENCY: {} break;
+    	case GST_MESSAGE_LATENCY: {} break;
 		/* Posted by elements when they start an ASYNC GstStateChange. 
 		This message is not forwarded to the application but is used 
 		internally. */ 
-    	case Gst::MESSAGE_ASYNC_START: {} break;
+    	case GST_MESSAGE_ASYNC_START: {} break;
 		/* Posted by elements when they complete an ASYNC 
 		GstStateChange. The application will only receive this 
 		message from the toplevel pipeline. */ 
-    	case Gst::MESSAGE_ASYNC_DONE: {} break;
+    	case GST_MESSAGE_ASYNC_DONE: {} break;
 		/* Posted by elements when they want the pipeline to 
 		change state. This message is a suggestion to the 
 		application which can decide to perform the state change 
 		on (part of) the pipeline. */ 
-    	case Gst::MESSAGE_REQUEST_STATE: {} break;
+    	case GST_MESSAGE_REQUEST_STATE: {} break;
 		// A stepping operation was started
-    	case Gst::MESSAGE_STEP_START: {} break;
+    	case GST_MESSAGE_STEP_START: {} break;
 		/* A buffer was dropped or an element changed its 
 		processing strategy for Quality of Service reasons. */ 
-    	case Gst::MESSAGE_QOS: {} break;
+    	case GST_MESSAGE_QOS: {} break;
 		// A progress message
-    	case Gst::MESSAGE_PROGRESS: {} break;
+    	case GST_MESSAGE_PROGRESS: {} break;
+    	case GST_MESSAGE_TOC: {} break;
+    	case GST_MESSAGE_RESET_TIME: {} break;
+    	case GST_MESSAGE_STREAM_START: {} break;
   	}
 	return true;
 }
 
-bool playerEngine::on_video_pad_got_buffer
+Gst::PadProbeReturn playerEngine::on_video_pad_got_buffer
 (
 	const Glib::RefPtr<Gst::Pad>& pad,
-	const Glib::RefPtr<Gst::MiniObject>& data
+   const Gst::PadProbeInfo& data
 )
 {
-	Glib::RefPtr<Gst::Buffer> buffer = Glib::RefPtr<Gst::Buffer>::cast_dynamic(data);
+/*	Glib::RefPtr<Gst::Buffer> buffer = Glib::RefPtr<Gst::Buffer>::cast_dynamic(data);
 
   if(buffer)
   {
@@ -272,8 +291,33 @@ bool playerEngine::on_video_pad_got_buffer
 
   pad->remove_buffer_probe(pad_probe_id);
   pad_probe_id = 0; // Clear probe id to indicate that it has been removed
+  return true; // Keep buffer in pipeline (do not throw away) 
+ */
+  int width_value;
+  int height_value;
 
-  return true; // Keep buffer in pipeline (do not throw away)
+  Glib::RefPtr<Gst::Caps> caps = pad->query_caps(Glib::RefPtr<Gst::Caps>());
+
+  caps = caps->create_writable();
+
+  const Gst::Structure structure = caps->get_structure(0);
+  if(structure)
+  {
+    structure.get_field("width", width_value);
+    structure.get_field("height", height_value);
+  }
+
+//  videoDrawingArea.set_size_request(width_value, height_value);
+
+  // Resize to minimum when first playing by making size
+  // smallest then resizing according to video new size:
+//  resize(1, 1);
+//  check_resize();
+
+  pad->remove_probe(pad_probe_id);
+  pad_probe_id = 0; // Clear probe id to indicate that it has been removed
+
+  return Gst::PAD_PROBE_OK;
 }
 
 Gst::State playerEngine::getState
@@ -405,10 +449,10 @@ void playerEngine::reset_pad_prob
 	to remove probe) */
 	if(pad_probe_id != 0) 
 	{
-		video_sink->get_static_pad("sink")->remove_buffer_probe
-		(
-			pad_probe_id
-		);
+		//video_sink->get_static_pad("sink")->remove_buffer_probe
+		//(
+		//	pad_probe_id
+		//);
 		pad_probe_id  = 0;		
 		// reset timecode duration and position
 		timecode_duration = 0;
@@ -425,24 +469,47 @@ void playerEngine::on_videoDrawingArea_realize
 	X Window ID and save it for when the Gst::XOverlay is ready to 
 	accept an ID in which to draw the video. */
 	
-	#if defined (GDK_WINDOWING_WIN32)
+	#ifdef GDK_WINDOWING_WIN32
 		x_window_id = (guintptr)GDK_WINDOW_HWND 
 		(
 			screen->get_window()->gobj()
 		);
-		
-	#elif defined (GDK_WINDOWING_QUARTZ)
+	#endif
+	#ifdef GDK_WINDOWING_QUARTZ
 		x_window_id = gdk_quartz_window_get_nsview 
 		(
 	  		screen->get_window()->gobj()
 	  	);
-	  	
-	#elif defined (GDK_WINDOWING_X11)
+	#endif
+	#ifdef GDK_WINDOWING_X11
 		x_window_id = GDK_WINDOW_XID 
 		(
 			screen->get_window()->gobj()
 		);
 	#endif
+}
+
+void playerEngine::on_video_changed
+(
+	void
+)
+{
+	Glib::RefPtr<Gst::Pad> pad = playout->get_video_pad(0);
+	if(pad)
+	{
+		// Add a buffer probe to the video sink pad which will be removed after
+		// the first buffer is received in the on_video_pad_got_buffer method.
+		// When the first buffer arrives, the video size can be extracted.
+		pad_probe_id = pad->add_probe
+		(
+			Gst::PAD_PROBE_TYPE_BUFFER,
+			sigc::mem_fun
+			(
+				*this, 
+				&playerEngine::on_video_pad_got_buffer
+			)
+		);
+  }
 }
 
 void playerEngine::setFile
@@ -478,7 +545,7 @@ void playerEngine::setFile
     	100
     );
     // set a buffer to the pad probe 
-    pad_probe_id = video_sink->get_static_pad
+    /*pad_probe_id = video_sink->get_static_pad
     ("sink")->add_buffer_probe
     	(
     		sigc::mem_fun
@@ -486,7 +553,24 @@ void playerEngine::setFile
     			*this, 
     			&playerEngine::on_video_pad_got_buffer
     		)
-    	);
+    	);*/
+    	
+	Glib::RefPtr<Gst::Pad> pad = playout->get_video_pad(0);
+	if(pad)
+	{
+		// Add a buffer probe to the video sink pad which will be removed after
+		// the first buffer is received in the on_video_pad_got_buffer method.
+		// When the first buffer arrives, the video size can be extracted.
+		pad_probe_id = pad->add_probe
+		(
+			Gst::PAD_PROBE_TYPE_BUFFER,
+			sigc::mem_fun
+			(
+				*this, 
+				&playerEngine::on_video_pad_got_buffer
+			)
+		);
+	}
     setState(Gst::STATE_PAUSED);
     on_timeout();
 }
@@ -609,7 +693,7 @@ bool playerEngine::on_forward_timeout
 	if(playout->query(query))
 	{
 		Glib::RefPtr<Gst::QueryPosition> posQuery = 
-		Glib::RefPtr<Gst::QueryPosition>::cast_dynamic(query);
+		Glib::RefPtr<Gst::QueryPosition>::cast_static(query);
 
 		gint64 pos = posQuery->parse();
 		gint64 newPos = 
@@ -628,10 +712,10 @@ bool playerEngine::on_forward_timeout
 		);
 
 		Glib::RefPtr<Gst::EventSeek> seekEvent = 
-		Glib::RefPtr<Gst::EventSeek>::cast_dynamic(event);
+		Glib::RefPtr<Gst::EventSeek>::cast_static(event);
 
-		timecode_position = (playout->send_event(seekEvent)) 
-			? newPos : pos ;
+		timecode_position = (Glib::RefPtr<Gst::Element>::cast_static(playout)->send_event(event)) 
+			? newPos : pos;
 	}
 	return true;	
 }
