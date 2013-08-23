@@ -309,22 +309,7 @@ int EBUCoreFeatures::getSchemas
 	std::vector<std::string> &files
 )
 {
-	DIR *dp;
-	struct dirent *dirp;
-	// if opening folder fail then
-	if((dp = opendir(dir.c_str())) == NULL) {
-		// display error message
-		std::cout << "Error(" << errno << ") opening " << dir << std::endl;
-		return errno;
-	}
-	// while not the end of folder
-	while ((dirp = readdir(dp)) != NULL) {
-		// if it is am xsd file then
-		if (dirp->d_type == DT_REG && genericFeatures::isExtension(dirp->d_name, "xsd"))
-			// save the schema filename inside the vector
-			files.push_back(std::string(dirp->d_name));
-	}
-	closedir(dp); // close folder
+	files=genericFeatures::listFiles(dir);
 	return 0;
 }
 
